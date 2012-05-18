@@ -1,0 +1,89 @@
+# ``savirc`` for SAVI Testbed project configurable variables in ``savi.sh``
+
+# Set a project name and version.
+PROJECT=DEVI
+
+# Set a savi testbed version.
+SAVI_VERSION=0.1
+
+# Set Devi Install Directory
+DEST=$HOME/savitest
+
+# SAVI TB Release Site
+SAVI_RELEASE_SITE=http://release.savinetwork.ca/releases
+
+# Specify java
+JAVA_VERSION=7
+JAVA_PKG_NAME=jdk-7u3-linux-i586.tar.gz
+JAVA_INSTALL_DIR=/usr/local/java
+JAVA_IHOME=${JAVA_INSTALL_DIR}/jdk1.7.0_03
+
+# Utility directory
+UTIL_DIR=util
+
+# Yak tool information as SAVI project utility.
+YAK_VERSION=0.7
+YAK_FILE=yak.tgz
+YAK_ADDRESS=${SAVI_RELEASE_SITE}/${YAK_FILE}
+YAK_FULLFILE=${UTIL_DIR}/${YAK_FILE}
+YAK_DIR=yak-${YAK_VERSION}
+
+# Specify ant ivy
+IVY_VERSION=2.3.0-rc1
+IVY_DIR=apache-ivy-${IVY_VERSION}
+IVY_FILE=apache-ivy-${IVY_VERSION}-bin.tar.gz
+IVY_ADDRESS=http://www.quickprepaidcard.com/apache//ant/ivy/2.3.0-rc1/apache-ivy-2.3.0-rc1-bin.tar.gz
+IVY_FULLFILE=${UTIL_DIR}/${IVY_FILE}
+IVY_INSTALLED_DIR=/usr/share/ant/lib
+
+# Specify MySQL
+MYSQL=mysql
+MYSQL_FILE=/etc/init.d/mysql
+SAVI_DATABASE=aoncontroldb
+SAVI_DBFILE=$DEST/yorkdale/aoncontroldb.sql
+
+# Specify which services to launch.  These generally correspond to
+# screen tabs. If you like to add other services that are not enabled
+# by default you can append them in your ENABLED_SERVICES variable in
+# your localrc.
+ENABLED_SERVICES=bloor,mysql
+
+# SAVI TB control center main
+BLOOR_PRJ=savi/bloor
+BLOOR_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/bloor
+BLOOR_BRANCH=master
+
+# Control service
+CHEETAH_PRJ=savi/cheetah
+CHEETAH_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/cheetah
+CHEETAH_BRANCH=master
+
+# Hardware resource service
+HORSE_PRJ=savi/horse
+HORSE_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/horse
+HORSE_BRANCH=master
+
+# Processing resource service
+COALA_PRJ=savi/coala
+COALA_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/coala
+COALA_BRANCH=master
+
+# SAVI CLI Client
+KING_PRJ=savi/king
+KING_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/king
+KING_BRANCH=master
+
+# Processing CLI Client
+QUEEN_PRJ=savi/queen
+QUEEN_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/queen
+QUEEN_BRANCH=master
+
+# Gateway CLI Client
+DUNDAS_PRJ=savi/dundas
+DUNDAS_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/dundas
+DUNDAS_BRANCH=master
+
+# Hardware CLI Client
+COLLEGE_PRJ=savi/college
+COLLEGE_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/college
+COLLEGE_BRANCH=master

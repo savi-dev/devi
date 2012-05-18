@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-eqiv='content-type' content='text/html;charset=utf-8'>
+    <title>localrc</title>
+    <link rel=stylesheet href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id=container>
+    <div id=background></div>
+    <table cellspacing=0 cellpadding=0>
+    <thead>
+      <tr>
+        <th class=docs><h1>localrc</h1></th>
+        <th class=code></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr><td class='docs'><p>Sample <code>localrc</code> for user-configurable variables in <code>savi.sh</code>
+HOST_IP should be set manually for best results.</p>
+
+</td><td class=code><div class=highlight><pre>
+
+<span class="nv">HOST_IP</span><span class="o">=</span>192.168.123.109
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>Set Devi Install Directory</h2>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>The Devi install directory is set by the <code>DEST</code> variable. By setting it
+early in <code>localrc</code> you can reference it in later variables. The default value
+is <code>/opt/savi</code>. It can be useful to set it even though it is not changed from
+the default value.
+Set Devi Install Directory</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">DEST</span><span class="o">=</span><span class="nv">$HOME</span>/savi
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Set git user name in savinetwork.ca</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">GIT_USERNAME</span><span class="o">=</span>eliot
+<span class="nv">GIT_EMAIL</span><span class="o">=</span>eliot@savinetwork.ca
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Specify MySQL information</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">MYSQL_USER</span><span class="o">=</span>root
+<span class="nv">MYSQL_PASSWORD</span><span class="o">=</span>Canada24
+
+
+</pre></div></td></tr><tr><td class=docs>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs></td><td class='code'></td></tr>
+    </tbody>
+    </table>
+</div>
+</body>
+</html>

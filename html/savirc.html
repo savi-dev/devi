@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-eqiv='content-type' content='text/html;charset=utf-8'>
+    <title>savirc</title>
+    <link rel=stylesheet href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id=container>
+    <div id=background></div>
+    <table cellspacing=0 cellpadding=0>
+    <thead>
+      <tr>
+        <th class=docs><h1>savirc</h1></th>
+        <th class=code></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr><td class='docs'><p><code>savirc</code> for SAVI Testbed project configurable variables in <code>savi.sh</code>
+Set a project name and version.</p>
+
+</td><td class=code><div class=highlight><pre>
+
+<span class="nv">PROJECT</span><span class="o">=</span>DEVI
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Set a savi testbed version.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">SAVI_VERSION</span><span class="o">=</span>0.1
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Set Devi Install Directory</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">DEST</span><span class="o">=</span><span class="nv">$HOME</span>/savitest
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>SAVI TB Release Site</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">SAVI_RELEASE_SITE</span><span class="o">=</span>http://release.savinetwork.ca/releases
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Specify java</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">JAVA_VERSION</span><span class="o">=</span>7
+<span class="nv">JAVA_PKG_NAME</span><span class="o">=</span>jdk-7u3-linux-i586.tar.gz
+<span class="nv">JAVA_INSTALL_DIR</span><span class="o">=</span>/usr/local/java
+<span class="nv">JAVA_IHOME</span><span class="o">=</span><span class="k">${</span><span class="nv">JAVA_INSTALL_DIR</span><span class="k">}</span>/jdk1.7.0_03
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Utility directory</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">UTIL_DIR</span><span class="o">=</span>util
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Yak tool information as SAVI project utility.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">YAK_VERSION</span><span class="o">=</span>0.7
+<span class="nv">YAK_FILE</span><span class="o">=</span>yak.tgz
+<span class="nv">YAK_ADDRESS</span><span class="o">=</span><span class="k">${</span><span class="nv">SAVI_RELEASE_SITE</span><span class="k">}</span>/<span class="k">${</span><span class="nv">YAK_FILE</span><span class="k">}</span>
+<span class="nv">YAK_FULLFILE</span><span class="o">=</span><span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">YAK_FILE</span><span class="k">}</span>
+<span class="nv">YAK_DIR</span><span class="o">=</span>yak-<span class="k">${</span><span class="nv">YAK_VERSION</span><span class="k">}</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Specify ant ivy</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">IVY_VERSION</span><span class="o">=</span>2.3.0-rc1
+<span class="nv">IVY_DIR</span><span class="o">=</span>apache-ivy-<span class="k">${</span><span class="nv">IVY_VERSION</span><span class="k">}</span>
+<span class="nv">IVY_FILE</span><span class="o">=</span>apache-ivy-<span class="k">${</span><span class="nv">IVY_VERSION</span><span class="k">}</span>-bin.tar.gz
+<span class="nv">IVY_ADDRESS</span><span class="o">=</span>http://www.quickprepaidcard.com/apache//ant/ivy/2.3.0-rc1/apache-ivy-2.3.0-rc1-bin.tar.gz
+<span class="nv">IVY_FULLFILE</span><span class="o">=</span><span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">IVY_FILE</span><span class="k">}</span>
+<span class="nv">IVY_INSTALLED_DIR</span><span class="o">=</span>/usr/share/ant/lib
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Specify MySQL</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">MYSQL</span><span class="o">=</span>mysql
+<span class="nv">MYSQL_FILE</span><span class="o">=</span>/etc/init.d/mysql
+<span class="nv">SAVI_DATABASE</span><span class="o">=</span>aoncontroldb
+<span class="nv">SAVI_DBFILE</span><span class="o">=</span><span class="nv">$DEST</span>/yorkdale/aoncontroldb.sql
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Specify which services to launch.  These generally correspond to
+screen tabs. If you like to add other services that are not enabled
+by default you can append them in your ENABLED_SERVICES variable in
+your localrc.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">ENABLED_SERVICES</span><span class="o">=</span>bloor,mysql
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>SAVI TB control center main</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">BLOOR_PRJ</span><span class="o">=</span>savi/bloor
+<span class="nv">BLOOR_REPO</span><span class="o">=</span>ssh://<span class="nv">$GIT_USERNAME</span>@review.savinetwork.ca:29418/savi/bloor
+<span class="nv">BLOOR_BRANCH</span><span class="o">=</span>master
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Control service</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">CHEETAH_PRJ</span><span class="o">=</span>savi/cheetah
+<span class="nv">CHEETAH_REPO</span><span class="o">=</span>ssh://<span class="nv">$GIT_USERNAME</span>@review.savinetwork.ca:29418/savi/cheetah
+<span class="nv">CHEETAH_BRANCH</span><span class="o">=</span>master
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Hardware resource service</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">HORSE_PRJ</span><span class="o">=</span>savi/horse
+<span class="nv">HORSE_REPO</span><span class="o">=</span>ssh://<span class="nv">$GIT_USERNAME</span>@review.savinetwork.ca:29418/savi/horse
+<span class="nv">HORSE_BRANCH</span><span class="o">=</span>master
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Processing resource service</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">COALA_PRJ</span><span class="o">=</span>savi/coala
+<span class="nv">COALA_REPO</span><span class="o">=</span>ssh://<span class="nv">$GIT_USERNAME</span>@review.savinetwork.ca:29418/savi/coala
+<span class="nv">COALA_BRANCH</span><span class="o">=</span>master
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>SAVI CLI Client</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">KING_PRJ</span><span class="o">=</span>savi/king
+<span class="nv">KING_REPO</span><span class="o">=</span>ssh://<span class="nv">$GIT_USERNAME</span>@review.savinetwork.ca:29418/savi/king
+<span class="nv">KING_BRANCH</span><span class="o">=</span>master
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Processing CLI Client</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">QUEEN_PRJ</span><span class="o">=</span>savi/queen
+<span class="nv">QUEEN_REPO</span><span class="o">=</span>ssh://<span class="nv">$GIT_USERNAME</span>@review.savinetwork.ca:29418/savi/queen
+<span class="nv">QUEEN_BRANCH</span><span class="o">=</span>master
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Gateway CLI Client</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">DUNDAS_PRJ</span><span class="o">=</span>savi/dundas
+<span class="nv">DUNDAS_REPO</span><span class="o">=</span>ssh://<span class="nv">$GIT_USERNAME</span>@review.savinetwork.ca:29418/savi/dundas
+<span class="nv">DUNDAS_BRANCH</span><span class="o">=</span>master
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Hardware CLI Client</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">COLLEGE_PRJ</span><span class="o">=</span>savi/college
+<span class="nv">COLLEGE_REPO</span><span class="o">=</span>ssh://<span class="nv">$GIT_USERNAME</span>@review.savinetwork.ca:29418/savi/college
+<span class="nv">COLLEGE_BRANCH</span><span class="o">=</span>master
+
+
+</pre></div></td></tr><tr><td class=docs>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs></td><td class='code'></td></tr>
+    </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-eqiv='content-type' content='text/html;charset=utf-8'>
+    <title>savi.sh</title>
+    <link rel=stylesheet href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id=container>
+    <div id=background></div>
+    <table cellspacing=0 cellpadding=0>
+    <thead>
+      <tr>
+        <th class=docs><h1>savi.sh</h1></th>
+        <th class=code></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr><td class='docs'><p>This script was written based on <code>stack.sh</code> from devStack.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="c">#!/usr/bin/env bash</span>
+
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p><code>savi.sh</code> is an opinionated SAVI testbed (TB) developer installation.
+It installs and configures SAVI TB Core logic (<strong>bloor</strong>, <strong>cheetah</strong>,
+<strong>yorkdale</strong>, <strong>moon</strong>, <strong>wilson</strong>, <strong>griffin</strong>), SAVI TB Resource Webservices
+(<strong>camel</strong>, <strong>coala</strong>, <strong>crane</strong>, <strong>horse</strong>), and SAVI TB clients (<strong>king</strong>,
+<strong>queen</strong>, <strong>dundas</strong>, <strong>college</strong>).</p>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Before running this script, you have to import your public key into review.savinetwork.ca.</p>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>This script allows you to specify configuration options of what git
+repositories to use, enabled services, network configuration and various
+passwords. 
+It downloads and installs all required software including <strong>MySQL</strong>, <strong>JDK</strong>, 
+<strong>Python</strong>, <strong>Apache Ant</strong>, <strong>Apache Ivy</strong>, and <strong>Yak</strong> tool for SAVI TB 
+development.</p>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>To keep this script simple we assume you are running on an <strong>Ubuntu 11.10
+Oneiric</strong> or <strong>Ubuntu 12.04 Precise</strong> machine.  It should work in a VM or
+physical server.</p>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Keep track of the devi directory</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">TOP_DIR</span><span class="o">=</span><span class="k">$(</span><span class="nb">cd</span> <span class="k">$(</span>dirname <span class="s2">&quot;$0&quot;</span><span class="k">)</span> <span class="o">&amp;&amp;</span> <span class="nb">pwd</span><span class="k">)</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Import common functions</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">source</span> <span class="nv">$TOP_DIR</span>/functions
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Determine what system we are running on.  This provides <code>os_VENDOR</code>,
+<code>os_RELEASE</code>, <code>os_UPDATE</code>, <code>os_PACKAGE</code>, <code>os_CODENAME</code></p>
+
+</td><td class=code><div class=highlight><pre>
+GetOSVersion
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Translate the OS version values into common nomenclature</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;$os_VENDOR&quot;</span> <span class="o">=</span>~ <span class="o">(</span>Ubuntu<span class="o">)</span> <span class="o">]]</span>; <span class="k">then</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>'Everyone' refers to Ubuntu releases by the code name adjective</p>
+
+</td><td class=code><div class=highlight><pre>
+    <span class="nv">DISTRO</span><span class="o">=</span><span class="nv">$os_CODENAME</span>
+<span class="k">elif</span> <span class="o">[[</span> <span class="s2">&quot;$os_VENDOR&quot;</span> <span class="o">=</span>~ <span class="o">(</span>Fedora<span class="o">)</span> <span class="o">]]</span>; <span class="k">then</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>For Fedora, just use 'f' and the release</p>
+
+</td><td class=code><div class=highlight><pre>
+    <span class="nv">DISTRO</span><span class="o">=</span><span class="s2">&quot;f$os_RELEASE&quot;</span>
+<span class="k">else</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Catch-all for now is Vendor + Release + Update</p>
+
+</td><td class=code><div class=highlight><pre>
+    <span class="nv">DISTRO</span><span class="o">=</span><span class="s2">&quot;$os_VENDOR-$os_RELEASE.$os_UPDATE&quot;</span>
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h1>Settings</h1>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p><code>savi.sh</code> is customizable through setting environment variables.  If you
+want to override a setting you can set and export it::</p>
+
+<pre><code>export MYSQL_PASSWORD=anothersecret
+./savi.sh
+</code></pre>
+
+<p>You can also pass options on a single line <code>MYSQL_PASSWORD=simple ./savi.sh</code></p>
+
+<p>Additionally, you can put any local variables into a <code>localrc</code> file::</p>
+
+<pre><code>MYSQL_USER=root
+MYSQL_PASSWORD=anothersecret
+</code></pre>
+
+<p>We try to have sensible defaults, so you should be able to run <code>./savi.sh</code>
+in most cases.</p>
+
+<p>Devi distributes <code>savi</code> which contains locations for the SAVI TB
+repositories and branches to configure.  <code>savirc</code> sources <code>localrc</code> to
+allow you to safely override those settings without being overwritten
+when updating Devi.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">if</span> <span class="o">[[</span> ! -r <span class="nv">$TOP_DIR</span>/savirc <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;ERROR: missing $TOP_DIR/savirc - did you grab more than just savi.sh?&quot;</span>
+    <span class="nb">exit </span>1
+<span class="k">fi</span>
+<span class="nb">source</span> <span class="nv">$TOP_DIR</span>/savirc
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Destination path for installation <code>DEST</code></p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">DEST</span><span class="o">=</span><span class="k">${</span><span class="nv">DEST</span><span class="k">:-</span><span class="p">/opt/savi</span><span class="k">}</span>
+
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h1>Sanity Check</h1>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Warn users who aren't on an explicitly supported distro.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">if</span> <span class="o">[[</span> ! <span class="k">${</span><span class="nv">DISTRO</span><span class="k">}</span> <span class="o">=</span>~ <span class="o">(</span>oneiric|precise|f16<span class="o">)</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;WARNING: this script has been tested on oneiric, precise and f16&quot;</span>
+    <span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;$FORCE&quot;</span> !<span class="o">=</span> <span class="s2">&quot;yes&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">        </span><span class="nb">echo</span> <span class="s2">&quot;If you wish to run this script anyway run with FORCE=yes&quot;</span>
+        <span class="nb">exit </span>1
+    <span class="k">fi</span>
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Check to see if we are already running Devi</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">if </span><span class="nb">type</span> -p screen &gt;/dev/null <span class="o">&amp;&amp;</span> screen -ls | egrep -q <span class="s2">&quot;[0-9].savi&quot;</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;You are already running a savi.sh session.&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;To rejoin this session type &#39;screen -x savi&#39;.&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;To destroy this session, kill the running screen.&quot;</span>
+    <span class="nb">exit </span>1
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Generic helper to configure passwords</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">function </span>read_password <span class="o">{</span>
+    <span class="nb">set</span> +o xtrace
+    <span class="nv">var</span><span class="o">=</span><span class="nv">$1</span>; <span class="nv">msg</span><span class="o">=</span><span class="nv">$2</span>
+    <span class="nv">pw</span><span class="o">=</span><span class="k">${</span><span class="p">!var</span><span class="k">}</span>
+
+    <span class="nv">localrc</span><span class="o">=</span><span class="nv">$TOP_DIR</span>/localrc
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>If the password is not defined yet, proceed to prompt user for a password.</p>
+
+</td><td class=code><div class=highlight><pre>
+    <span class="k">if</span> <span class="o">[</span> ! <span class="nv">$pw</span> <span class="o">]</span>; <span class="k">then</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>If there is no localrc file, create one</p>
+
+</td><td class=code><div class=highlight><pre>
+        <span class="k">if</span> <span class="o">[</span> ! -e <span class="nv">$localrc</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">            </span>touch <span class="nv">$localrc</span>
+        <span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Presumably if we got this far it can only be that our localrc is missing
+the required password.  Prompt user for a password and write to localrc.</p>
+
+</td><td class=code><div class=highlight><pre>
+        <span class="nb">echo</span> <span class="s1">&#39;&#39;</span>
+        <span class="nb">echo</span> <span class="s1">&#39;################################################################################&#39;</span>
+        <span class="nb">echo</span> <span class="nv">$msg</span>
+        <span class="nb">echo</span> <span class="s1">&#39;################################################################################&#39;</span>
+        <span class="nb">echo</span> <span class="s2">&quot;This value will be written to your localrc file so you don&#39;t have to enter it &quot;</span>
+        <span class="nb">echo</span> <span class="s2">&quot;again.  Use only alphanumeric characters.&quot;</span>
+        <span class="nb">echo</span> <span class="s2">&quot;If you leave this blank, a random default value will be used.&quot;</span>
+        <span class="nv">pw</span><span class="o">=</span><span class="s2">&quot; &quot;</span>
+        <span class="k">while </span><span class="nb">true</span>; <span class="k">do</span>
+<span class="k">            </span><span class="nb">echo</span> <span class="s2">&quot;Enter a password now:&quot;</span>
+            <span class="nb">read</span> -e <span class="nv">$var</span>
+            <span class="nv">pw</span><span class="o">=</span><span class="k">${</span><span class="p">!var</span><span class="k">}</span>
+            <span class="o">[[</span> <span class="s2">&quot;$pw&quot;</span> <span class="o">=</span> <span class="s2">&quot;`echo $pw | tr -cd [:alnum:]`&quot;</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">break</span>
+<span class="nb">            echo</span> <span class="s2">&quot;Invalid chars in password.  Try again:&quot;</span>
+        <span class="k">done</span>
+<span class="k">        if</span> <span class="o">[</span> ! <span class="nv">$pw</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">            </span><span class="nv">pw</span><span class="o">=</span><span class="sb">`</span>openssl rand -hex 10<span class="sb">`</span>
+        <span class="k">fi</span>
+<span class="k">        </span><span class="nb">eval</span> <span class="s2">&quot;$var=$pw&quot;</span>
+        <span class="nb">echo</span> <span class="s2">&quot;$var=$pw&quot;</span> &gt;&gt; <span class="nv">$localrc</span>
+    <span class="k">fi</span>
+<span class="k">    </span><span class="nb">set</span> -o xtrace
+<span class="o">}</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Install required software for SAVI TB: <strong>MySQL</strong>, <strong>Java Development Kit 7</strong>,
+<strong>Python 2.7</strong>, <strong>Apache Ant</strong>, <strong>Apache Ivy</strong>, and <strong>Yak</strong> tool.</p>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>MySQL</h2>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>We configure a SAVI TB control webservice to use MySQL as their
+database server.</p>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>By default this script will install and configure MySQL.  If you want to
+use an existing server, you can pass in the user/password/host parameters.
+You will need to send the same <code>MYSQL_PASSWORD</code> to every host if you are doing
+a multi-node DevStack installation.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">MYSQL_HOST</span><span class="o">=</span><span class="k">${</span><span class="nv">MYSQL_HOST</span><span class="k">:-</span><span class="nv">localhost</span><span class="k">}</span>
+<span class="nv">MYSQL_USER</span><span class="o">=</span><span class="k">${</span><span class="nv">MYSQL_USER</span><span class="k">:-</span><span class="nv">root</span><span class="k">}</span>
+read_password MYSQL_PASSWORD <span class="s2">&quot;ENTER A PASSWORD TO USE FOR MYSQL.&quot;</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>NOTE: Don't specify /db in this string so we can use it for multiple services</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">BASE_SQL_CONN</span><span class="o">=</span><span class="k">${</span><span class="nv">BASE_SQL_CONN</span><span class="k">:-</span><span class="nv">mysql</span><span class="p">://</span><span class="nv">$MYSQL_USER</span><span class="p">:</span><span class="nv">$MYSQL_PASSWORD</span><span class="p">@</span><span class="nv">$MYSQL_HOST</span><span class="k">}</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>Log files</h2>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Set up logging for savi.sh
+Set LOGFILE to turn on logging
+We append '.xxxxxxxx' to the given name to maintain history
+where xxxxxxxx is a representation of the date the file was created</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">if</span> <span class="o">[[</span> -n <span class="s2">&quot;$LOGFILE&quot;</span> <span class="o">||</span> -n <span class="s2">&quot;$SCREEN_LOGDIR&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nv">LOGDAYS</span><span class="o">=</span><span class="k">${</span><span class="nv">LOGDAYS</span><span class="k">:-</span><span class="nv">7</span><span class="k">}</span>
+    <span class="nv">TIMESTAMP_FORMAT</span><span class="o">=</span><span class="k">${</span><span class="nv">TIMESTAMP_FORMAT</span><span class="k">:-</span><span class="s2">&quot;%F-%H%M%S&quot;</span><span class="k">}</span>
+    <span class="nv">CURRENT_LOG_TIME</span><span class="o">=</span><span class="k">$(</span>date <span class="s2">&quot;+$TIMESTAMP_FORMAT&quot;</span><span class="k">)</span>
+<span class="k">fi</span>
+
+<span class="k">if</span> <span class="o">[[</span> -n <span class="s2">&quot;$LOGFILE&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>First clean up old log files.  Use the user-specified LOGFILE
+as the template to search for, appending '.*' to match the date
+we added on earlier runs.</p>
+
+</td><td class=code><div class=highlight><pre>
+    <span class="nv">LOGDIR</span><span class="o">=</span><span class="k">$(</span>dirname <span class="s2">&quot;$LOGFILE&quot;</span><span class="k">)</span>
+    <span class="nv">LOGNAME</span><span class="o">=</span><span class="k">$(</span>basename <span class="s2">&quot;$LOGFILE&quot;</span><span class="k">)</span>
+    mkdir -p <span class="nv">$LOGDIR</span>
+    find <span class="nv">$LOGDIR</span> -maxdepth 1 -name <span class="nv">$LOGNAME</span>.<span class="se">\*</span> -mtime +<span class="nv">$LOGDAYS</span> -exec rm <span class="o">{}</span> <span class="se">\;</span>
+
+    <span class="nv">LOGFILE</span><span class="o">=</span><span class="nv">$LOGFILE</span>.<span class="k">${</span><span class="nv">CURRENT_LOG_TIME</span><span class="k">}</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Redirect stdout/stderr to tee to write the log file</p>
+
+</td><td class=code><div class=highlight><pre>
+    <span class="nb">exec </span>1&gt; &gt;<span class="o">(</span> tee <span class="s2">&quot;${LOGFILE}&quot;</span> <span class="o">)</span> 2&gt;&amp;1
+    <span class="nb">echo</span> <span class="s2">&quot;savi.sh log $LOGFILE&quot;</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Specified logfile name always links to the most recent log</p>
+
+</td><td class=code><div class=highlight><pre>
+    ln -sf <span class="nv">$LOGFILE</span> <span class="nv">$LOGDIR</span>/<span class="nv">$LOGNAME</span>
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Set up logging of screen windows
+Set SCREEN<em>LOGDIR to turn on logging of screen windows to the
+directory specified in SCREEN</em>LOGDIR, we will log to the the file
+screen-$SERVICE<em>NAME-$TIMESTAMP.log in that dir and have a link
+screen-$SERVICE</em>NAME.log to the latest log file.
+Logs are kept for as long specified in LOGDAYS.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">if</span> <span class="o">[[</span> -n <span class="s2">&quot;$SCREEN_LOGDIR&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>We make sure the directory is created.</p>
+
+</td><td class=code><div class=highlight><pre>
+    <span class="k">if</span> <span class="o">[[</span> -d <span class="s2">&quot;$SCREEN_LOGDIR&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>We cleanup the old logs</p>
+
+</td><td class=code><div class=highlight><pre>
+        find <span class="nv">$SCREEN_LOGDIR</span> -maxdepth 1 -name screen-<span class="se">\*</span>.log -mtime +<span class="nv">$LOGDAYS</span> -exec rm <span class="o">{}</span> <span class="se">\;</span>
+    <span class="k">else</span>
+<span class="k">        </span>mkdir -p <span class="nv">$SCREEN_LOGDIR</span>
+    <span class="k">fi</span>
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>So that errors don't compound we exit on any errors so you see only the
+first error that occurred.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">trap </span>failed ERR
+failed<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">local </span><span class="nv">r</span><span class="o">=</span><span class="nv">$?</span>
+    <span class="nb">set</span> +o xtrace
+    <span class="o">[</span> -n <span class="s2">&quot;$LOGFILE&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">&quot;${0##*/} failed: full log in $LOGFILE&quot;</span>
+    <span class="nb">exit</span> <span class="nv">$r</span>
+<span class="o">}</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Print the commands being run so that we can see the command that triggers
+an error.  It is also useful for following along as the install occurs.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">set</span> -o xtrace
+
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>create the destination directory and ensure it is writable by the user</p>
+
+</td><td class=code><div class=highlight><pre>
+sudo mkdir -p <span class="nv">$DEST</span>
+<span class="k">if</span> <span class="o">[</span> ! -w <span class="nv">$DEST</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">    </span>sudo chown <span class="sb">`</span>whoami<span class="sb">`</span> <span class="nv">$DEST</span>
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h1>Install Packages</h1>
+
+<p>SAVI uses a fair number of other projects.
+Python</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">echo</span>
+<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing a python tool&quot;</span>
+<span class="nb">echo</span>
+<span class="c">#sudo apt-get install python</span>
+
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>Yak tool</h2>
+
+<p>If yak is installed, skip this process, otherwise, download it from 
+a SAVI release site.</p>
+
+</td><td class=code><div class=highlight><pre>
+
+<span class="nb">echo</span>
+<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Yak tool&quot;</span>
+<span class="nb">echo</span>
+<span class="k">if</span> <span class="o">[[</span> ! -f <span class="nv">$TOP_DIR</span>/<span class="k">${</span><span class="nv">YAK_FULLFILE</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is no ${YAK_FILE} in ${TOP_DIR}/${UTIL_DIR}&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Downloading... ${YAK_FILE} from ${YAK_ADDRESS}&quot;</span>
+  <span class="nb">cd</span> <span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>; wget <span class="k">${</span><span class="nv">YAK_ADDRESS</span><span class="k">}</span>
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Setup a yak tool so it is installed into python path.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">echo</span>
+<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing a yak tool&quot;</span>
+<span class="nb">echo</span>
+<span class="nb">cd</span> <span class="nv">$TOP_DIR</span>/<span class="nv">$UTIL_DIR</span>; tar xvzf <span class="k">${</span><span class="nv">YAK_FILE</span><span class="k">}</span>; <span class="nb">cd</span> <span class="k">${</span><span class="nv">YAK_DIR</span><span class="k">}</span>; sudo python setup.py develop; <span class="nb">cd</span> ..; rm -rf <span class="k">${</span><span class="nv">YAK_DIR</span><span class="k">}</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>Git</h2>
+
+<p>Git setting. Set your username and email</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">echo</span>
+<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Setting a git username and email&quot;</span>
+<span class="nb">echo</span>
+git config --global user.name <span class="k">${</span><span class="nv">GIT_USERNAME</span><span class="k">}</span>
+git config --global user.email <span class="k">${</span><span class="nv">GIT_EMAIL</span><span class="k">}</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>JDK</h2>
+
+<p>Java Development Kit
+<strong>Warning</strong>: Download Oracle Java 7 from http://www.oracle.com/technetwork/java/javase/downloads/index.html.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing JDK&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Removing openjdk-6 if there is an installed openjdk.&quot;</span>
+sudo apt-get autoremove openjdk-6-jre-headless
+<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Downloading Oracle java 7&quot;</span>
+<span class="k">if</span> <span class="o">[[</span> ! -f <span class="k">${</span><span class="nv">TOP_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">JAVA_PKG_NAME</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is no ${JAVA_PKG_NAME} in ${TOP_DIR}/${UTIL_DIR}&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Please, download JDK-${JAVA_VERSION} from http://www.oracle.com/technetwork/java/javase/downloads/index.html&quot;</span>
+  <span class="nb">exit </span>1;
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>If there is an installed JDK, skip this process.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Checking an installed JDK&quot;</span>
+<span class="k">if</span> <span class="o">[[</span> ! -d <span class="k">${</span><span class="nv">JAVA_HOME</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Copying ${JAVA_PKG_NAME} to ${JAVA_INSTALL_DIR}&quot;</span>
+  sudo cp -r <span class="k">${</span><span class="nv">TOP_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">JAVA_PKG_NAME</span><span class="k">}</span> <span class="k">${</span><span class="nv">JAVA_IHOME</span><span class="k">}</span>
+
+  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Extracting...&quot;</span>
+  <span class="nb">cd</span> <span class="k">${</span><span class="nv">JAVA_INSTALL_DIR</span><span class="k">}</span>; sudo chmod a+x <span class="k">${</span><span class="nv">JAVA_PKG_NAME</span><span class="k">}</span>; sudo tar xvzf <span class="k">${</span><span class="nv">JAVA_PKG_NAME</span><span class="k">}</span>
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>If a JAVA_HOME environment variable is different to the installed JAVA, add it to a .bashrc file.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;$JAVA_IHOME&quot;</span> <span class="o">=</span> <span class="s2">&quot;$JAVA_HOME&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] JAVA_HOME is set and same to the installed one.&quot;</span>
+<span class="k">else</span>
+<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] JAVA_HOME is set but different to the installed one.&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] JAVA_HOME and PATH in .bashrc are changing...&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+  <span class="nb">echo</span> <span class="s2">&quot;# Setting JAVA_HOME&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+  <span class="nb">echo</span> <span class="s2">&quot;JAVA_HOME=$JAVA_HOME&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+  <span class="nb">echo</span> <span class="s2">&quot;PATH=\$PATH:\$JAVA_HOME/bin&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+  <span class="nb">echo</span> <span class="s2">&quot;export JAVA_HOME&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+  <span class="nb">echo</span> <span class="s2">&quot;export PATH&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>Ant and Ivy</h2>
+
+<p>Apache Ant</p>
+
+</td><td class=code><div class=highlight><pre>
+sudo apt-get install ant -y
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Download and install Apache Ivy.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">echo</span>
+<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Apache Ivy tool&quot;</span>
+<span class="nb">echo</span>
+<span class="k">if</span> <span class="o">[[</span> ! -f <span class="nv">$TOP_DIR</span>/<span class="k">${</span><span class="nv">IVY_FULLFILE</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is no ${IVY_FILE} in ${TOP_DIR}/${UTIL_DIR}&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Downloading... ${IVY_FILE} from ${IVY_ADDRESS}&quot;</span>
+  wget <span class="k">${</span><span class="nv">IVY_ADDRESS</span><span class="k">}</span>
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Setup ivy tool so it is installed into ant path</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">echo</span>
+<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing a ivy tool&quot;</span>
+<span class="nb">echo</span>
+<span class="nb">cd</span> <span class="nv">$TOP_DIR</span>/<span class="nv">$UTIL_DIR</span>; tar xvzf <span class="k">${</span><span class="nv">IVY_FILE</span><span class="k">}</span>; <span class="nb">cd</span> <span class="k">${</span><span class="nv">IVY_DIR</span><span class="k">}</span>; sudo cp ivy-<span class="k">${</span><span class="nv">IVY_VERSION</span><span class="k">}</span>.jar <span class="nv">$IVY_INSTALLED_DIR</span>; <span class="nb">cd</span> ..; rm -rf <span class="k">${</span><span class="nv">IVY_DIR</span><span class="k">}</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>SAVI TB service</h2>
+
+<p>Clone all enabled packages from SAVI repository</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">if </span>is_service_enabled bloor ; <span class="k">then</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>SAVI TB web service</p>
+
+</td><td class=code><div class=highlight><pre>
+  <span class="nb">cd</span> <span class="nv">$DEST</span>;gitvi clone <span class="nv">$BLOOR_PRJ</span>
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>Mysql</h2>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">if</span> <span class="o">[[</span> ! -f <span class="k">${</span><span class="nv">MYSQL_FILE</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is no installed MySQL&quot;</span>
+  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing MySQL&quot;</span>
+  sudo apt-get install mysql-server -y
+<span class="k">fi</span>
+
+<span class="c">#sudo /etc/init.d/mysql stop</span>
+<span class="c">#sudo mysqld --skip-grant-tables &amp;</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>MySQL</h2>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">if </span>is_service_enabled mysql; <span class="k">then</span>
+
+<span class="k">    if</span> <span class="o">[[</span> <span class="s2">&quot;$os_PACKAGE&quot;</span> <span class="o">=</span> <span class="s2">&quot;deb&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Seed configuration with mysql password so that apt-get install doesn't
+prompt us for a password upon install.</p>
+
+</td><td class=code><div class=highlight><pre>
+        cat <span class="s">&lt;&lt;MYSQL_PRESEED | sudo debconf-set-selections</span>
+<span class="s">mysql-server-5.1 mysql-server/root_password password $MYSQL_PASSWORD</span>
+<span class="s">mysql-server-5.1 mysql-server/root_password_again password $MYSQL_PASSWORD</span>
+<span class="s">mysql-server-5.1 mysql-server/start_on_boot boolean true</span>
+<span class="s">MYSQL_PRESEED</span>
+    <span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>while <code>.my.cnf</code> is not needed for SAVI to function, it is useful
+as it allows you to access the mysql databases via <code>mysql nova</code> instead
+of having to specify the username/password each time.</p>
+
+</td><td class=code><div class=highlight><pre>
+    <span class="k">if</span> <span class="o">[[</span> ! -e <span class="nv">$HOME</span>/.my.cnf <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">        </span>cat <span class="s">&lt;&lt;EOF &gt;$HOME/.my.cnf</span>
+<span class="s">[client]</span>
+<span class="s">user=$MYSQL_USER</span>
+<span class="s">password=$MYSQL_PASSWORD</span>
+<span class="s">host=$MYSQL_HOST</span>
+<span class="s">EOF</span>
+        chmod 0600 <span class="nv">$HOME</span>/.my.cnf
+    <span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Install and start mysql-server</p>
+
+</td><td class=code><div class=highlight><pre>
+    install_package mysql-server
+</pre></div></td></tr><tr><td class=docs>
+
+<p>sudo mysql -uroot -p$MYSQL<em>PASSWORD -h127.0.0.1 -e "GRANT ALL PRIVILEGES ON *.* TO '$MYSQL</em>USER'@'%' identified by '$MYSQL_PASSWORD';"</p>
+
+</td><td class=code><div class=highlight><pre>
+    sudo mysql -u root mysql -e <span class="s2">&quot;UPDATE user SET Password=PASSWORD(&#39;$MYSQL_PASSWORD&#39;) WHERE User=&#39;$MYSQL_USER&#39;; FLUSH PRIVILEGES;&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Restarting MySQL&quot;</span>
+    sudo service <span class="nv">$MYSQL</span> start
+    <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Creating a database, aoncontroldb&quot;</span>
+    sudo mysql -u <span class="nv">$MYSQL_USER</span> -p <span class="nv">$MYSQL_PASSWORD</span> <span class="nv">$SAVI_DATABASE</span> &lt; <span class="nv">$SAVI_DBFILE</span>
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h1>Build SAVI TB Projects</h1>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Build all SAVI TB projects</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">cd</span> <span class="nv">$DEST</span>/BLOOR_PRJ; ant dist
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Execute it using screen</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="c">#screen -S savi -X screen -t java -jar ${DEST}/${BLOOR_PRJ}/dist/bloor-${SAVI_VERSION}.jar</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<h1>Launch Services</h1>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Only run the services specified in <code>ENABLED_SERVICES</code></p>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>launch the bloor service</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">if </span>is_service_enabled bloor; <span class="k">then</span>
+<span class="k">    </span>screen_it bloor <span class="s2">&quot;cd ${DEST}/${BLOOR_PRJ}; java -jar dist/bloor-${SAVI_VERSION}.jar&quot;</span>
+<span class="k">fi</span>
+
+
+</pre></div></td></tr><tr><td class=docs>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs></td><td class='code'></td></tr>
+    </tbody>
+    </table>
+</div>
+</body>
+</html>
