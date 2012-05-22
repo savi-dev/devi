@@ -232,7 +232,8 @@ fi
 echo
 echo "[${PROJECT}] Installing a python tool"
 echo
-#sudo apt-get install python
+#sudo apt-get install python -y
+sudo apt-get install python-setuptools -y
 
 
 # Yak tool
