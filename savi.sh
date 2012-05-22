@@ -240,6 +240,10 @@ echo
 # If yak is installed, skip this process, otherwise, download it from 
 # a SAVI release site.
 
+if [[ -n "$TOP_DIR/$UTIL_DIR" ]]; then
+  mkdir $TOP_DIR/$UTIL_DIR
+fi
+
 echo
 echo "[${PROJECT}] Yak tool"
 echo
