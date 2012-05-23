@@ -219,9 +219,9 @@ set -o xtrace
 
 
 # create the destination directory and ensure it is writable by the user
-sudo mkdir -p $DEST
+mkdir -p $DEST
 if [ ! -w $DEST ]; then
-    sudo chown `whoami` $DEST
+    chown `whoami` $DEST
 fi
 
 # Install Packages
@@ -232,18 +232,13 @@ fi
 echo
 echo "[${PROJECT}] Installing a python tool"
 echo
-#sudo apt-get install python -y
+sudo apt-get install python -y
 sudo apt-get install python-setuptools -y
 
 # Yak tool
 # ----------------
 # If yak is installed, skip this process, otherwise, download it from 
 # a SAVI release site.
-
-if [[ -n "$TOP_DIR/$UTIL_DIR" ]]; then
-  mkdir $TOP_DIR/$UTIL_DIR
-fi
-
 echo
 echo "[${PROJECT}] Yak tool"
 echo
@@ -257,7 +252,7 @@ fi
 echo
 echo "[${PROJECT}] Installing a yak tool"
 echo
-cd $TOP_DIR/$UTIL_DIR; tar xvzf ${YAK_FILE}; cd ${YAK_DIR}; sudo python setup.py develop; cd ..; rm -rf ${YAK_DIR}
+cd $TOP_DIR/$UTIL_DIR; tar xvzf ${YAK_FILE}; cd ${YAK_DIR}; sudo python setup.py develop; cd ..;
 
 # Git
 # ----------------
@@ -273,64 +268,90 @@ git config --global user.email ${GIT_EMAIL}
 # Java Development Kit
 # **Warning**: Download Oracle Java 7 from http://www.oracle.com/technetwork/java/javase/downloads/index.html.
 echo "[${PROJECT}] Installing JDK"
-echo "[${PROJECT}] Removing openjdk-6 if there is an installed openjdk."
-sudo apt-get autoremove openjdk-6-jre-headless
-echo "[${PROJECT}] Downloading Oracle java 7"
-if [[ ! -f ${TOP_DIR}/${UTIL_DIR}/${JAVA_PKG_NAME} ]]; then
-  echo "[${PROJECT}] There is no ${JAVA_PKG_NAME} in ${TOP_DIR}/${UTIL_DIR}"
-  echo "[${PROJECT}] Please, download JDK-${JAVA_VERSION} from http://www.oracle.com/technetwork/java/javase/downloads/index.html"
-  exit 1;
-fi
+if [[ ! -d ${JAVA_IHOME} ]]; then
+  echo "[${PROJECT}] Removing openjdk-6 if there is an installed openjdk."
+  sudo apt-get autoremove openjdk-6-jre-headless
+  echo "[${PROJECT}] Downloading Oracle java 7"
+  if [[ ! -f ${TOP_DIR}/${UTIL_DIR}/${JAVA_PKG_NAME} ]]; then
+    echo "[${PROJECT}] There is no ${JAVA_PKG_NAME} in ${TOP_DIR}/${UTIL_DIR}"
+    echo "[${PROJECT}] Please, download JDK-${JAVA_VERSION} from http://www.oracle.com/technetwork/java/javase/downloads/index.html"
+    exit 1;
+  fi
 
-# If there is an installed JDK, skip this process.
-echo "[${PROJECT}] Checking an installed JDK"
-if [[ ! -d ${JAVA_HOME} ]]; then
-  echo "[${PROJECT}] Copying ${JAVA_PKG_NAME} to ${JAVA_INSTALL_DIR}"
-  sudo cp -r ${TOP_DIR}/${UTIL_DIR}/${JAVA_PKG_NAME} ${JAVA_IHOME}
+  # If there is an installed JDK, skip this process.
+  echo "[${PROJECT}] Checking an installed JDK"
+  if [[ ! -d ${JAVA_IHOME} ]]; then
+    echo "[${PROJECT}] Copying ${JAVA_PKG_NAME} to ${JAVA_INSTALL_DIR}"
+    cd ${TOP_DIR}/${UTIL_DIR}; tar xvzf ${JAVA_PKG_NAME}; sudo mv ${JAVA_DIR} ${JAVA_INSTALL_DIR}
+  fi
 
-  echo "[${PROJECT}] Extracting..."
-  cd ${JAVA_INSTALL_DIR}; sudo chmod a+x ${JAVA_PKG_NAME}; sudo tar xvzf ${JAVA_PKG_NAME}
-fi
-
-# If a JAVA_HOME environment variable is different to the installed JAVA, add it to a .bashrc file.
-if [[ "$JAVA_IHOME" = "$JAVA_HOME" ]]; then
-  echo "[${PROJECT}] JAVA_HOME is set and same to the installed one."
+  # If a JAVA_HOME environment variable is different to the installed JAVA, add it to a .bashrc file.
+  if [[ "$JAVA_IHOME" = "$JAVA_HOME" ]]; then
+    echo "[${PROJECT}] JAVA_HOME is set and same to the installed one."
+  else
+    echo "[${PROJECT}] JAVA_HOME is set but different to the installed one."
+    echo "[${PROJECT}] JAVA_HOME and PATH in .bashrc are changing..."
+    echo "" >> $HOME/.bashrc
+    echo "# Setting JAVA_HOME" >> $HOME/.bashrc
+    echo "JAVA_HOME=$JAVA_IHOME" >> $HOME/.bashrc
+    echo "PATH=\$PATH:\$JAVA_HOME/bin" >> $HOME/.bashrc
+    echo "export JAVA_HOME" >> $HOME/.bashrc
+    echo "export PATH" >> $HOME/.bashrc
+    source $HOME/.bashrc
+  fi
 else
-  echo "[${PROJECT}] JAVA_HOME is set but different to the installed one."
-  echo "[${PROJECT}] JAVA_HOME and PATH in .bashrc are changing..."
-  echo "" >> $HOME/.bashrc
-  echo "# Setting JAVA_HOME" >> $HOME/.bashrc
-  echo "JAVA_HOME=$JAVA_HOME" >> $HOME/.bashrc
-  echo "PATH=\$PATH:\$JAVA_HOME/bin" >> $HOME/.bashrc
-  echo "export JAVA_HOME" >> $HOME/.bashrc
-  echo "export PATH" >> $HOME/.bashrc
+  echo "[${PROJECT}] There is an installed JAVA in $JAVA_INSTALL_DIR"
 fi
 
-# Ant and Ivy
+# Apache Ant and Ivy
 # ----------------
 # Apache Ant
-if [[ ! -f $TOP_DIR/${ANT_FULLFILE} ]]; then
-  echo "[${PROJECT}] There is no ${ANT_FILE} in ${TOP_DIR}/${UTIL_DIR}"
-  echo "[${PROJECT}] Downloading... ${ANT_FILE} from ${ANT_ADDRESS}"
-  wget ${ANT_ADDRESS}
+# Download and install Apache Ivy.
+echo "[${PROJECT}] Apache Ant tool"
+if [[ ! -d ${ANT_IHOME} ]]; then
+  echo "[${PROJECT}] There is no installed Ant in $ANT_INSTALL_DIR"
+  if [[ ! -d "$ANT_INSTALL_DIR" ]]; then
+    sudo mkdir $ANT_INSTALL_DIR
+  fi
+  if [[ ! -f $TOP_DIR/${ANT_FULLFILE} ]]; then
+    echo "[${PROJECT}] There is no ${ANT_FILE} in ${TOP_DIR}/${UTIL_DIR}"
+    echo "[${PROJECT}] Downloading... ${ANT_FILE} from ${ANT_ADDRESS}"
+    cd ${TOP_DIR}/${UTIL_DIR}; wget ${ANT_ADDRESS}
+  fi
+  echo "[${PROJECT}] Installing an Ant tool" 
+  cd $TOP_DIR/$UTIL_DIR; tar xvzf ${ANT_FILE}; sudo mv ${ANT_DIR} $ANT_INSTALL_DIR;
+  # If a ANT_HOME environment variable is different to the installed ANT, add it to a .bashrc file.
+  if [[ "$ANT_IHOME" = "$ANT_HOME" ]]; then
+    echo "[${PROJECT}] ANT_HOME is set and same to the installed one."
+  else
+    echo "[${PROJECT}] ANT_HOME is set but different to the installed one."
+    echo "[${PROJECT}] ANT_HOME and PATH in .bashrc are changing..."
+    echo "" >> $HOME/.bashrc
+    echo "# Setting ANT_HOME" >> $HOME/.bashrc
+    echo "ANT_HOME=$ANT_IHOME" >> $HOME/.bashrc
+    echo "PATH=\$PATH:\$ANT_HOME/bin" >> $HOME/.bashrc
+    echo "export ANT_HOME" >> $HOME/.bashrc
+    echo "export PATH" >> $HOME/.bashrc
+    source $HOME/.bashrc
+  fi
+else
+  echo "[${PROJECT}] There is an installed Ant in $ANT_INSTALL_DIR"
 fi
-
 
 # Download and install Apache Ivy.
-echo
 echo "[${PROJECT}] Apache Ivy tool"
-echo
-if [[ ! -f $TOP_DIR/${IVY_FULLFILE} ]]; then
-  echo "[${PROJECT}] There is no ${IVY_FILE} in ${TOP_DIR}/${UTIL_DIR}"
-  echo "[${PROJECT}] Downloading... ${IVY_FILE} from ${IVY_ADDRESS}"
-  wget ${IVY_ADDRESS}
-fi
+if [[ ! -f $IVY_INSTALL_DIR/${IVY_FILE} ]]; then
+  echo "[${PROJECT}] There is no ${IVY_FILE} in ${ANT_IHOME}/lib"
+  if [[ ! -f $TOP_DIR/${IVY_FULLFILE} ]]; then
+    echo "[${PROJECT}] There is no ${IVY_PKG_FILE} in ${TOP_DIR}/${UTIL_DIR}"
+    echo "[${PROJECT}] Downloading... ${IVY_FILE} from ${IVY_ADDRESS}"
+    cd ${TOP_DIR}/${UTIL_DIR}; wget ${IVY_ADDRESS}
+  fi
 
-# Setup ivy tool so it is installed into ant path
-echo
-echo "[${PROJECT}] Installing a ivy tool"
-echo
-cd $TOP_DIR/$UTIL_DIR; tar xvzf ${IVY_FILE}; cd ${IVY_DIR}; sudo cp ivy-${IVY_VERSION}.jar $IVY_INSTALLED_DIR; cd ..; rm -rf ${IVY_DIR}
+  # Setup ivy tool so it is installed into ant path
+  echo "[${PROJECT}] Installing a ivy tool"
+  cd $TOP_DIR/$UTIL_DIR; tar xvzf ${IVY_PKG_FILE}; cd ${IVY_DIR}; sudo cp ivy-${IVY_VERSION}.jar $IVY_INSTALL_DIR; cd ..; rm -rf ${IVY_DIR}
+fi
 
 # SAVI TB service
 # ----------------
@@ -392,7 +413,7 @@ fi
 # =============
 
 # Build all SAVI TB projects
-cd $DEST/BLOOR_PRJ; ant dist
+#cd $DEST/BLOOR_PRJ; ant dist
 
 # Execute it using screen
 #screen -S savi -X screen -t java -jar ${DEST}/${BLOOR_PRJ}/dist/bloor-${SAVI_VERSION}.jar
@@ -402,6 +423,7 @@ cd $DEST/BLOOR_PRJ; ant dist
 # Only run the services specified in ``ENABLED_SERVICES``
 
 # launch the bloor service
-if is_service_enabled bloor; then
-    screen_it bloor "cd ${DEST}/${BLOOR_PRJ}; java -jar dist/bloor-${SAVI_VERSION}.jar"
-fi
+#if is_service_enabled bloor; then
+#    screen_it bloor "cd ${DEST}/${BLOOR_PRJ}; java -jar dist/bloor-${SAVI_VERSION}.jar"
+#fi
+

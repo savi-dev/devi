@@ -18,6 +18,7 @@ SAVI_RELEASE_SITE=http://release.savinetwork.ca/releases
 
 # Specify java
 JAVA_VERSION=7
+JAVA_DIR=jdk1.7.0_04
 JAVA_PKG_NAME=jdk-7u4-linux-i586.tar.gz
 JAVA_INSTALL_DIR=/usr/local/java
 JAVA_IHOME=${JAVA_INSTALL_DIR}/jdk1.7.0_04
@@ -38,15 +39,17 @@ ANT_DIR=apache-ant-${ANT_VERSION}
 ANT_FILE=apache-ant-${ANT_VERSION}-bin.tar.gz
 ANT_ADDRESS=http://apache.parentingamerica.com//ant/binaries/${ANT_FILE}
 ANT_FULLFILE=${UTIL_DIR}/${ANT_FILE}
-ANT_INSTALLED_DIR=/usr/share/
+ANT_INSTALL_DIR=/usr/local/ant
+ANT_IHOME=${ANT_INSTALL_DIR}/${ANT_DIR}
 
 # Specify ant ivy
 IVY_VERSION=2.3.0-rc1
 IVY_DIR=apache-ivy-${IVY_VERSION}
-IVY_FILE=apache-ivy-${IVY_VERSION}-bin.tar.gz
+IVY_PKG_FILE=apache-ivy-${IVY_VERSION}-bin.tar.gz
+IVY_FILE=ivy-${IVY_VERSION}.jar
 IVY_ADDRESS=http://www.quickprepaidcard.com/apache//ant/ivy/2.3.0-rc1/apache-ivy-2.3.0-rc1-bin.tar.gz
-IVY_FULLFILE=${UTIL_DIR}/${IVY_FILE}
-IVY_INSTALLED_DIR=/usr/share/ant/lib
+IVY_FULLFILE=${UTIL_DIR}/${IVY_PKG_FILE}
+IVY_INSTALL_DIR=$ANT_IHOME/lib
 
 # Specify MySQL
 MYSQL=mysql

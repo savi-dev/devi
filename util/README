@@ -1,1 +1,5 @@
 This is a directory for utilities.
+
+1. Download a Oracle JDK 7 from http://www.oracle.com/technetwork/java/javase/downloads/index.html.
+
+2. Modify JAVA_* variables based on your downloaded file.
