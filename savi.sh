@@ -235,7 +235,6 @@ echo
 #sudo apt-get install python -y
 sudo apt-get install python-setuptools -y
 
-
 # Yak tool
 # ----------------
 # If yak is installed, skip this process, otherwise, download it from 
@@ -310,7 +309,12 @@ fi
 # Ant and Ivy
 # ----------------
 # Apache Ant
-sudo apt-get install ant -y
+if [[ ! -f $TOP_DIR/${ANT_FULLFILE} ]]; then
+  echo "[${PROJECT}] There is no ${ANT_FILE} in ${TOP_DIR}/${UTIL_DIR}"
+  echo "[${PROJECT}] Downloading... ${ANT_FILE} from ${ANT_ADDRESS}"
+  wget ${ANT_ADDRESS}
+fi
+
 
 # Download and install Apache Ivy.
 echo

@@ -1,15 +1,2 @@
 # Sample ``localrc`` for user-configurable variables in ``savi.sh``
 
-# Set Devi Install Directory
-# ------------------------------
-
-# The Devi install directory is set by the ``DEST`` variable. By setting it
-# early in ``localrc`` you can reference it in later variables. The default value
-# is ``/opt/savi``. It can be useful to set it even though it is not changed from
-# the default value.
-# Set Devi Install Directory
-DEST=$HOME/savi
-
-# Set git user name in savinetwork.ca
-GIT_USERNAME=eliot
-GIT_EMAIL=eliot@savinetwork.ca

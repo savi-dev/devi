@@ -9,14 +9,18 @@ SAVI_VERSION=0.1
 # Set Devi Install Directory
 DEST=$HOME/savitest
 
+# Set git user name in savinetwork.ca
+GIT_USERNAME=eliot
+GIT_EMAIL=eliot@savinetwork.ca
+
 # SAVI TB Release Site
 SAVI_RELEASE_SITE=http://release.savinetwork.ca/releases
 
 # Specify java
 JAVA_VERSION=7
-JAVA_PKG_NAME=jdk-7u3-linux-i586.tar.gz
+JAVA_PKG_NAME=jdk-7u4-linux-i586.tar.gz
 JAVA_INSTALL_DIR=/usr/local/java
-JAVA_IHOME=${JAVA_INSTALL_DIR}/jdk1.7.0_03
+JAVA_IHOME=${JAVA_INSTALL_DIR}/jdk1.7.0_04
 
 # Utility directory
 UTIL_DIR=util
@@ -27,6 +31,14 @@ YAK_FILE=yak.tgz
 YAK_ADDRESS=${SAVI_RELEASE_SITE}/${YAK_FILE}
 YAK_FULLFILE=${UTIL_DIR}/${YAK_FILE}
 YAK_DIR=yak-${YAK_VERSION}
+
+# Specify ant ivy
+ANT_VERSION=1.8.4
+ANT_DIR=apache-ant-${ANT_VERSION}
+ANT_FILE=apache-ant-${ANT_VERSION}-bin.tar.gz
+ANT_ADDRESS=http://apache.parentingamerica.com//ant/binaries/${ANT_FILE}
+ANT_FULLFILE=${UTIL_DIR}/${ANT_FILE}
+ANT_INSTALLED_DIR=/usr/share/
 
 # Specify ant ivy
 IVY_VERSION=2.3.0-rc1
