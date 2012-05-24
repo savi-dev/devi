@@ -66,11 +66,13 @@ SAVI_DBFILE=$DEST/yorkdale/aoncontroldb.sql
 ENABLED_SERVICES=bloor,mysql
 
 # SAVI TB control center main
+BLOOR=bloor
 BLOOR_PRJ=savi/bloor
 BLOOR_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/bloor
 BLOOR_BRANCH=master
 
 # Control service
+CHEETAH=cheetah
 CHEETAH_PRJ=savi/cheetah
 CHEETAH_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/cheetah
 CHEETAH_BRANCH=master

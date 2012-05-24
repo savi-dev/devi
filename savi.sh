@@ -415,7 +415,7 @@ fi
 # =============
 
 # Build all SAVI TB projects
-cd $DEST/$BLOOR_PRJ; ant dist
+cd $DEST/$BLOOR; ant dist
 
 # Execute it using screen
 screen -S savi -X screen -t java -jar ${DEST}/${BLOOR_PRJ}/dist/bloor-${SAVI_VERSION}.jar
