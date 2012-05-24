@@ -39,6 +39,14 @@ Set a project name and version.</p>
 
 </pre></div></td></tr><tr><td class=docs>
 
+<p>Set git user name in savinetwork.ca</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">GIT_USERNAME</span><span class="o">=</span>eliot
+<span class="nv">GIT_EMAIL</span><span class="o">=</span>eliot@savinetwork.ca
+
+</pre></div></td></tr><tr><td class=docs>
+
 <p>SAVI TB Release Site</p>
 
 </td><td class=code><div class=highlight><pre>
@@ -50,9 +58,10 @@ Set a project name and version.</p>
 
 </td><td class=code><div class=highlight><pre>
 <span class="nv">JAVA_VERSION</span><span class="o">=</span>7
-<span class="nv">JAVA_PKG_NAME</span><span class="o">=</span>jdk-7u3-linux-i586.tar.gz
+<span class="nv">JAVA_DIR</span><span class="o">=</span>jdk1.7.0_04
+<span class="nv">JAVA_PKG_NAME</span><span class="o">=</span>jdk-7u4-linux-i586.tar.gz
 <span class="nv">JAVA_INSTALL_DIR</span><span class="o">=</span>/usr/local/java
-<span class="nv">JAVA_IHOME</span><span class="o">=</span><span class="k">${</span><span class="nv">JAVA_INSTALL_DIR</span><span class="k">}</span>/jdk1.7.0_03
+<span class="nv">JAVA_IHOME</span><span class="o">=</span><span class="k">${</span><span class="nv">JAVA_INSTALL_DIR</span><span class="k">}</span>/jdk1.7.0_04
 
 </pre></div></td></tr><tr><td class=docs>
 
@@ -77,12 +86,26 @@ Set a project name and version.</p>
 <p>Specify ant ivy</p>
 
 </td><td class=code><div class=highlight><pre>
+<span class="nv">ANT_VERSION</span><span class="o">=</span>1.8.4
+<span class="nv">ANT_DIR</span><span class="o">=</span>apache-ant-<span class="k">${</span><span class="nv">ANT_VERSION</span><span class="k">}</span>
+<span class="nv">ANT_FILE</span><span class="o">=</span>apache-ant-<span class="k">${</span><span class="nv">ANT_VERSION</span><span class="k">}</span>-bin.tar.gz
+<span class="nv">ANT_ADDRESS</span><span class="o">=</span>http://apache.parentingamerica.com//ant/binaries/<span class="k">${</span><span class="nv">ANT_FILE</span><span class="k">}</span>
+<span class="nv">ANT_FULLFILE</span><span class="o">=</span><span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">ANT_FILE</span><span class="k">}</span>
+<span class="nv">ANT_INSTALL_DIR</span><span class="o">=</span>/usr/local/ant
+<span class="nv">ANT_IHOME</span><span class="o">=</span><span class="k">${</span><span class="nv">ANT_INSTALL_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">ANT_DIR</span><span class="k">}</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Specify ant ivy</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="nv">IVY_VERSION</span><span class="o">=</span>2.3.0-rc1
 <span class="nv">IVY_DIR</span><span class="o">=</span>apache-ivy-<span class="k">${</span><span class="nv">IVY_VERSION</span><span class="k">}</span>
-<span class="nv">IVY_FILE</span><span class="o">=</span>apache-ivy-<span class="k">${</span><span class="nv">IVY_VERSION</span><span class="k">}</span>-bin.tar.gz
+<span class="nv">IVY_PKG_FILE</span><span class="o">=</span>apache-ivy-<span class="k">${</span><span class="nv">IVY_VERSION</span><span class="k">}</span>-bin.tar.gz
+<span class="nv">IVY_FILE</span><span class="o">=</span>ivy-<span class="k">${</span><span class="nv">IVY_VERSION</span><span class="k">}</span>.jar
 <span class="nv">IVY_ADDRESS</span><span class="o">=</span>http://www.quickprepaidcard.com/apache//ant/ivy/2.3.0-rc1/apache-ivy-2.3.0-rc1-bin.tar.gz
-<span class="nv">IVY_FULLFILE</span><span class="o">=</span><span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">IVY_FILE</span><span class="k">}</span>
-<span class="nv">IVY_INSTALLED_DIR</span><span class="o">=</span>/usr/share/ant/lib
+<span class="nv">IVY_FULLFILE</span><span class="o">=</span><span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">IVY_PKG_FILE</span><span class="k">}</span>
+<span class="nv">IVY_INSTALL_DIR</span><span class="o">=</span><span class="nv">$ANT_IHOME</span>/lib
 
 </pre></div></td></tr><tr><td class=docs>
 
@@ -90,6 +113,8 @@ Set a project name and version.</p>
 
 </td><td class=code><div class=highlight><pre>
 <span class="nv">MYSQL</span><span class="o">=</span>mysql
+<span class="nv">MYSQL_USER</span><span class="o">=</span>root
+<span class="nv">MYSQL_PASSWORD</span><span class="o">=</span>Canada24
 <span class="nv">MYSQL_FILE</span><span class="o">=</span>/etc/init.d/mysql
 <span class="nv">SAVI_DATABASE</span><span class="o">=</span>aoncontroldb
 <span class="nv">SAVI_DBFILE</span><span class="o">=</span><span class="nv">$DEST</span>/yorkdale/aoncontroldb.sql

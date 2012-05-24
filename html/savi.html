@@ -385,9 +385,9 @@ an error.  It is also useful for following along as the install occurs.</p>
 <p>create the destination directory and ensure it is writable by the user</p>
 
 </td><td class=code><div class=highlight><pre>
-sudo mkdir -p <span class="nv">$DEST</span>
+mkdir -p <span class="nv">$DEST</span>
 <span class="k">if</span> <span class="o">[</span> ! -w <span class="nv">$DEST</span> <span class="o">]</span>; <span class="k">then</span>
-<span class="k">    </span>sudo chown <span class="sb">`</span>whoami<span class="sb">`</span> <span class="nv">$DEST</span>
+<span class="k">    </span>chown <span class="sb">`</span>whoami<span class="sb">`</span> <span class="nv">$DEST</span>
 <span class="k">fi</span>
 
 </pre></div></td></tr><tr><td class=docs>
@@ -401,8 +401,8 @@ Python</p>
 <span class="nb">echo</span>
 <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing a python tool&quot;</span>
 <span class="nb">echo</span>
-<span class="c">#sudo apt-get install python</span>
-
+sudo apt-get install python -y
+sudo apt-get install python-setuptools -y
 
 </pre></div></td></tr><tr><td class=docs>
 
@@ -412,7 +412,6 @@ Python</p>
 a SAVI release site.</p>
 
 </td><td class=code><div class=highlight><pre>
-
 <span class="nb">echo</span>
 <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Yak tool&quot;</span>
 <span class="nb">echo</span>
@@ -430,7 +429,7 @@ a SAVI release site.</p>
 <span class="nb">echo</span>
 <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing a yak tool&quot;</span>
 <span class="nb">echo</span>
-<span class="nb">cd</span> <span class="nv">$TOP_DIR</span>/<span class="nv">$UTIL_DIR</span>; tar xvzf <span class="k">${</span><span class="nv">YAK_FILE</span><span class="k">}</span>; <span class="nb">cd</span> <span class="k">${</span><span class="nv">YAK_DIR</span><span class="k">}</span>; sudo python setup.py develop; <span class="nb">cd</span> ..; rm -rf <span class="k">${</span><span class="nv">YAK_DIR</span><span class="k">}</span>
+<span class="nb">cd</span> <span class="nv">$TOP_DIR</span>/<span class="nv">$UTIL_DIR</span>; tar xvzf <span class="k">${</span><span class="nv">YAK_FILE</span><span class="k">}</span>; <span class="nb">cd</span> <span class="k">${</span><span class="nv">YAK_DIR</span><span class="k">}</span>; sudo python setup.py develop; <span class="nb">cd</span> ..;
 
 </pre></div></td></tr><tr><td class=docs>
 
@@ -454,79 +453,114 @@ git config --global user.email <span class="k">${</span><span class="nv">GIT_EMA
 
 </td><td class=code><div class=highlight><pre>
 <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing JDK&quot;</span>
-<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Removing openjdk-6 if there is an installed openjdk.&quot;</span>
-sudo apt-get autoremove openjdk-6-jre-headless
-<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Downloading Oracle java 7&quot;</span>
-<span class="k">if</span> <span class="o">[[</span> ! -f <span class="k">${</span><span class="nv">TOP_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">JAVA_PKG_NAME</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
-<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is no ${JAVA_PKG_NAME} in ${TOP_DIR}/${UTIL_DIR}&quot;</span>
-  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Please, download JDK-${JAVA_VERSION} from http://www.oracle.com/technetwork/java/javase/downloads/index.html&quot;</span>
-  <span class="nb">exit </span>1;
-<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[[</span> ! -d <span class="k">${</span><span class="nv">JAVA_IHOME</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Removing openjdk-6 if there is an installed openjdk.&quot;</span>
+  sudo apt-get autoremove openjdk-6-jre-headless
+  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Downloading Oracle java 7&quot;</span>
+  <span class="k">if</span> <span class="o">[[</span> ! -f <span class="k">${</span><span class="nv">TOP_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">JAVA_PKG_NAME</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is no ${JAVA_PKG_NAME} in ${TOP_DIR}/${UTIL_DIR}&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Please, download JDK-${JAVA_VERSION} from http://www.oracle.com/technetwork/java/javase/downloads/index.html&quot;</span>
+    <span class="nb">exit </span>1;
+  <span class="k">fi</span>
 
 </pre></div></td></tr><tr><td class=docs>
 
 <p>If there is an installed JDK, skip this process.</p>
 
 </td><td class=code><div class=highlight><pre>
-<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Checking an installed JDK&quot;</span>
-<span class="k">if</span> <span class="o">[[</span> ! -d <span class="k">${</span><span class="nv">JAVA_HOME</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
-<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Copying ${JAVA_PKG_NAME} to ${JAVA_INSTALL_DIR}&quot;</span>
-  sudo cp -r <span class="k">${</span><span class="nv">TOP_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">JAVA_PKG_NAME</span><span class="k">}</span> <span class="k">${</span><span class="nv">JAVA_IHOME</span><span class="k">}</span>
-
-  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Extracting...&quot;</span>
-  <span class="nb">cd</span> <span class="k">${</span><span class="nv">JAVA_INSTALL_DIR</span><span class="k">}</span>; sudo chmod a+x <span class="k">${</span><span class="nv">JAVA_PKG_NAME</span><span class="k">}</span>; sudo tar xvzf <span class="k">${</span><span class="nv">JAVA_PKG_NAME</span><span class="k">}</span>
-<span class="k">fi</span>
+  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Checking an installed JDK&quot;</span>
+  <span class="k">if</span> <span class="o">[[</span> ! -d <span class="k">${</span><span class="nv">JAVA_IHOME</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Copying ${JAVA_PKG_NAME} to ${JAVA_INSTALL_DIR}&quot;</span>
+    <span class="nb">cd</span> <span class="k">${</span><span class="nv">TOP_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>; tar xvzf <span class="k">${</span><span class="nv">JAVA_PKG_NAME</span><span class="k">}</span>; sudo mv <span class="k">${</span><span class="nv">JAVA_DIR</span><span class="k">}</span> <span class="k">${</span><span class="nv">JAVA_INSTALL_DIR</span><span class="k">}</span>
+  <span class="k">fi</span>
 
 </pre></div></td></tr><tr><td class=docs>
 
 <p>If a JAVA_HOME environment variable is different to the installed JAVA, add it to a .bashrc file.</p>
 
 </td><td class=code><div class=highlight><pre>
-<span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;$JAVA_IHOME&quot;</span> <span class="o">=</span> <span class="s2">&quot;$JAVA_HOME&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
-<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] JAVA_HOME is set and same to the installed one.&quot;</span>
+  <span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;$JAVA_IHOME&quot;</span> <span class="o">=</span> <span class="s2">&quot;$JAVA_HOME&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] JAVA_HOME is set and same to the installed one.&quot;</span>
+  <span class="k">else</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] JAVA_HOME is set but different to the installed one.&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] JAVA_HOME and PATH in .bashrc are changing...&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+    <span class="nb">echo</span> <span class="s2">&quot;# Setting JAVA_HOME&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+    <span class="nb">echo</span> <span class="s2">&quot;JAVA_HOME=$JAVA_IHOME&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+    <span class="nb">echo</span> <span class="s2">&quot;PATH=\$PATH:\$JAVA_HOME/bin&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+    <span class="nb">echo</span> <span class="s2">&quot;export JAVA_HOME&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+    <span class="nb">echo</span> <span class="s2">&quot;export PATH&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+    <span class="nb">source</span> <span class="nv">$HOME</span>/.bashrc
+  <span class="k">fi</span>
 <span class="k">else</span>
-<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] JAVA_HOME is set but different to the installed one.&quot;</span>
-  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] JAVA_HOME and PATH in .bashrc are changing...&quot;</span>
-  <span class="nb">echo</span> <span class="s2">&quot;&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
-  <span class="nb">echo</span> <span class="s2">&quot;# Setting JAVA_HOME&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
-  <span class="nb">echo</span> <span class="s2">&quot;JAVA_HOME=$JAVA_HOME&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
-  <span class="nb">echo</span> <span class="s2">&quot;PATH=\$PATH:\$JAVA_HOME/bin&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
-  <span class="nb">echo</span> <span class="s2">&quot;export JAVA_HOME&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
-  <span class="nb">echo</span> <span class="s2">&quot;export PATH&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is an installed JAVA in $JAVA_INSTALL_DIR&quot;</span>
 <span class="k">fi</span>
 
 </pre></div></td></tr><tr><td class=docs>
 
-<h2>Ant and Ivy</h2>
+<h2>Apache Ant and Ivy</h2>
 
-<p>Apache Ant</p>
+<p>Apache Ant
+Download and install Apache Ivy.</p>
 
 </td><td class=code><div class=highlight><pre>
-sudo apt-get install ant -y
+<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Apache Ant tool&quot;</span>
+<span class="k">if</span> <span class="o">[[</span> ! -d <span class="k">${</span><span class="nv">ANT_IHOME</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is no installed Ant in $ANT_INSTALL_DIR&quot;</span>
+  <span class="k">if</span> <span class="o">[[</span> ! -d <span class="s2">&quot;$ANT_INSTALL_DIR&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">    </span>sudo mkdir <span class="nv">$ANT_INSTALL_DIR</span>
+  <span class="k">fi</span>
+<span class="k">  if</span> <span class="o">[[</span> ! -f <span class="nv">$TOP_DIR</span>/<span class="k">${</span><span class="nv">ANT_FULLFILE</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is no ${ANT_FILE} in ${TOP_DIR}/${UTIL_DIR}&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Downloading... ${ANT_FILE} from ${ANT_ADDRESS}&quot;</span>
+    <span class="nb">cd</span> <span class="k">${</span><span class="nv">TOP_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>; wget <span class="k">${</span><span class="nv">ANT_ADDRESS</span><span class="k">}</span>
+  <span class="k">fi</span>
+<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing an Ant tool&quot;</span> 
+  <span class="nb">cd</span> <span class="nv">$TOP_DIR</span>/<span class="nv">$UTIL_DIR</span>; tar xvzf <span class="k">${</span><span class="nv">ANT_FILE</span><span class="k">}</span>; sudo mv <span class="k">${</span><span class="nv">ANT_DIR</span><span class="k">}</span> <span class="nv">$ANT_INSTALL_DIR</span>;
+</pre></div></td></tr><tr><td class=docs>
+
+<p>If a ANT_HOME environment variable is different to the installed ANT, add it to a .bashrc file.</p>
+
+</td><td class=code><div class=highlight><pre>
+  <span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;$ANT_IHOME&quot;</span> <span class="o">=</span> <span class="s2">&quot;$ANT_HOME&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] ANT_HOME is set and same to the installed one.&quot;</span>
+  <span class="k">else</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] ANT_HOME is set but different to the installed one.&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] ANT_HOME and PATH in .bashrc are changing...&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+    <span class="nb">echo</span> <span class="s2">&quot;# Setting ANT_HOME&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+    <span class="nb">echo</span> <span class="s2">&quot;ANT_HOME=$ANT_IHOME&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+    <span class="nb">echo</span> <span class="s2">&quot;PATH=\$PATH:\$ANT_HOME/bin&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+    <span class="nb">echo</span> <span class="s2">&quot;export ANT_HOME&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+    <span class="nb">echo</span> <span class="s2">&quot;export PATH&quot;</span> &gt;&gt; <span class="nv">$HOME</span>/.bashrc
+    <span class="nb">source</span> <span class="nv">$HOME</span>/.bashrc
+  <span class="k">fi</span>
+<span class="k">else</span>
+<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is an installed Ant in $ANT_INSTALL_DIR&quot;</span>
+<span class="k">fi</span>
 
 </pre></div></td></tr><tr><td class=docs>
 
 <p>Download and install Apache Ivy.</p>
 
 </td><td class=code><div class=highlight><pre>
-<span class="nb">echo</span>
 <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Apache Ivy tool&quot;</span>
-<span class="nb">echo</span>
-<span class="k">if</span> <span class="o">[[</span> ! -f <span class="nv">$TOP_DIR</span>/<span class="k">${</span><span class="nv">IVY_FULLFILE</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
-<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is no ${IVY_FILE} in ${TOP_DIR}/${UTIL_DIR}&quot;</span>
-  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Downloading... ${IVY_FILE} from ${IVY_ADDRESS}&quot;</span>
-  wget <span class="k">${</span><span class="nv">IVY_ADDRESS</span><span class="k">}</span>
-<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[[</span> ! -f <span class="nv">$IVY_INSTALL_DIR</span>/<span class="k">${</span><span class="nv">IVY_FILE</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is no ${IVY_FILE} in ${ANT_IHOME}/lib&quot;</span>
+  <span class="k">if</span> <span class="o">[[</span> ! -f <span class="nv">$TOP_DIR</span>/<span class="k">${</span><span class="nv">IVY_FULLFILE</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is no ${IVY_PKG_FILE} in ${TOP_DIR}/${UTIL_DIR}&quot;</span>
+    <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Downloading... ${IVY_FILE} from ${IVY_ADDRESS}&quot;</span>
+    <span class="nb">cd</span> <span class="k">${</span><span class="nv">TOP_DIR</span><span class="k">}</span>/<span class="k">${</span><span class="nv">UTIL_DIR</span><span class="k">}</span>; wget <span class="k">${</span><span class="nv">IVY_ADDRESS</span><span class="k">}</span>
+  <span class="k">fi</span>
 
 </pre></div></td></tr><tr><td class=docs>
 
 <p>Setup ivy tool so it is installed into ant path</p>
 
 </td><td class=code><div class=highlight><pre>
-<span class="nb">echo</span>
-<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing a ivy tool&quot;</span>
-<span class="nb">echo</span>
-<span class="nb">cd</span> <span class="nv">$TOP_DIR</span>/<span class="nv">$UTIL_DIR</span>; tar xvzf <span class="k">${</span><span class="nv">IVY_FILE</span><span class="k">}</span>; <span class="nb">cd</span> <span class="k">${</span><span class="nv">IVY_DIR</span><span class="k">}</span>; sudo cp ivy-<span class="k">${</span><span class="nv">IVY_VERSION</span><span class="k">}</span>.jar <span class="nv">$IVY_INSTALLED_DIR</span>; <span class="nb">cd</span> ..; rm -rf <span class="k">${</span><span class="nv">IVY_DIR</span><span class="k">}</span>
+  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing a ivy tool&quot;</span>
+  <span class="nb">cd</span> <span class="nv">$TOP_DIR</span>/<span class="nv">$UTIL_DIR</span>; tar xvzf <span class="k">${</span><span class="nv">IVY_PKG_FILE</span><span class="k">}</span>; <span class="nb">cd</span> <span class="k">${</span><span class="nv">IVY_DIR</span><span class="k">}</span>; sudo cp ivy-<span class="k">${</span><span class="nv">IVY_VERSION</span><span class="k">}</span>.jar <span class="nv">$IVY_INSTALL_DIR</span>; <span class="nb">cd</span> ..; rm -rf <span class="k">${</span><span class="nv">IVY_DIR</span><span class="k">}</span>
+<span class="k">fi</span>
 
 </pre></div></td></tr><tr><td class=docs>
 
@@ -535,28 +569,14 @@ sudo apt-get install ant -y
 <p>Clone all enabled packages from SAVI repository</p>
 
 </td><td class=code><div class=highlight><pre>
-<span class="k">if </span>is_service_enabled bloor ; <span class="k">then</span>
+<span class="c">#if is_service_enabled bloor ; then</span>
 </pre></div></td></tr><tr><td class=docs>
 
-<p>SAVI TB web service</p>
+<p>SAVI TB web service
+ cd $DEST;gitvi clone $BLOOR_PRJ</p>
 
 </td><td class=code><div class=highlight><pre>
-  <span class="nb">cd</span> <span class="nv">$DEST</span>;gitvi clone <span class="nv">$BLOOR_PRJ</span>
-<span class="k">fi</span>
-
-</pre></div></td></tr><tr><td class=docs>
-
-<h2>Mysql</h2>
-
-</td><td class=code><div class=highlight><pre>
-<span class="k">if</span> <span class="o">[[</span> ! -f <span class="k">${</span><span class="nv">MYSQL_FILE</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
-<span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] There is no installed MySQL&quot;</span>
-  <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing MySQL&quot;</span>
-  sudo apt-get install mysql-server -y
-<span class="k">fi</span>
-
-<span class="c">#sudo /etc/init.d/mysql stop</span>
-<span class="c">#sudo mysqld --skip-grant-tables &amp;</span>
+<span class="c">#fi</span>
 
 </pre></div></td></tr><tr><td class=docs>
 
@@ -602,16 +622,41 @@ of having to specify the username/password each time.</p>
 
 </td><td class=code><div class=highlight><pre>
     install_package mysql-server
+    <span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;$os_PACKAGE&quot;</span> <span class="o">=</span> <span class="s2">&quot;rpm&quot;</span> <span class="o">]]</span>; <span class="k">then</span> 
 </pre></div></td></tr><tr><td class=docs>
 
-<p>sudo mysql -uroot -p$MYSQL<em>PASSWORD -h127.0.0.1 -e "GRANT ALL PRIVILEGES ON *.* TO '$MYSQL</em>USER'@'%' identified by '$MYSQL_PASSWORD';"</p>
+<p>RPM doesn't start the service</p>
 
 </td><td class=code><div class=highlight><pre>
-    sudo mysql -u root mysql -e <span class="s2">&quot;UPDATE user SET Password=PASSWORD(&#39;$MYSQL_PASSWORD&#39;) WHERE User=&#39;$MYSQL_USER&#39;; FLUSH PRIVILEGES;&quot;</span>
-    <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Restarting MySQL&quot;</span>
-    sudo service <span class="nv">$MYSQL</span> start
-    <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Creating a database, aoncontroldb&quot;</span>
-    sudo mysql -u <span class="nv">$MYSQL_USER</span> -p <span class="nv">$MYSQL_PASSWORD</span> <span class="nv">$SAVI_DATABASE</span> &lt; <span class="nv">$SAVI_DBFILE</span>
+        start_service mysqld
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Set the root password - only works the first time</p>
+
+</td><td class=code><div class=highlight><pre>
+        sudo mysqladmin -u root password <span class="nv">$MYSQL_PASSWORD</span> <span class="o">||</span> <span class="nb">true </span>
+<span class="nb">    </span><span class="k">fi</span>   
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Update the DB to give user ‘$MYSQL_USER’@’%’ full control of the all databases:</p>
+
+</td><td class=code><div class=highlight><pre>
+    sudo mysql -uroot -p<span class="nv">$MYSQL_PASSWORD</span> -h127.0.0.1 -e <span class="s2">&quot;GRANT ALL PRIVILEGES ON *.* TO &#39;$MYSQL_USER&#39;@&#39;%&#39; identified by &#39;$MYSQL_PASSWORD&#39;;&quot;</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Edit /etc/mysql/my.cnf to change ‘bind-address’ from localhost (127.0.0.1) to any (0.0.0.0) and restart the mysql service:</p>
+
+</td><td class=code><div class=highlight><pre>
+    <span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;$os_PACKAGE&quot;</span> <span class="o">=</span> <span class="s2">&quot;deb&quot;</span> <span class="o">]]</span>; <span class="k">then </span>
+<span class="k">        </span><span class="nv">MY_CNF</span><span class="o">=</span>/etc/mysql/my.cnf
+        <span class="nv">MYSQL</span><span class="o">=</span>mysql
+    <span class="k">else </span>
+<span class="k">        </span><span class="nv">MY_CNF</span><span class="o">=</span>/etc/my.cnf
+        <span class="nv">MYSQL</span><span class="o">=</span>mysqld
+    <span class="k">fi   </span>
+<span class="k">    </span>sudo sed -i <span class="s1">&#39;s/127.0.0.1/0.0.0.0/g&#39;</span> <span class="nv">$MY_CNF</span>
+    restart_service <span class="nv">$MYSQL</span>
 <span class="k">fi</span>
 
 </pre></div></td></tr><tr><td class=docs>
@@ -632,7 +677,8 @@ of having to specify the username/password each time.</p>
 <p>Execute it using screen</p>
 
 </td><td class=code><div class=highlight><pre>
-<span class="c">#screen -S savi -X screen -t java -jar ${DEST}/${BLOOR_PRJ}/dist/bloor-${SAVI_VERSION}.jar</span>
+screen -S savi -X screen -t java -jar <span class="k">${</span><span class="nv">DEST</span><span class="k">}</span>/<span class="k">${</span><span class="nv">BLOOR_PRJ</span><span class="k">}</span>/dist/bloor-<span class="k">${</span><span class="nv">SAVI_VERSION</span><span class="k">}</span>.jar
+
 </pre></div></td></tr><tr><td class=docs>
 
 <h1>Launch Services</h1>
@@ -653,6 +699,7 @@ of having to specify the username/password each time.</p>
 <span class="k">if </span>is_service_enabled bloor; <span class="k">then</span>
 <span class="k">    </span>screen_it bloor <span class="s2">&quot;cd ${DEST}/${BLOOR_PRJ}; java -jar dist/bloor-${SAVI_VERSION}.jar&quot;</span>
 <span class="k">fi</span>
+
 
 
 </pre></div></td></tr><tr><td class=docs>
