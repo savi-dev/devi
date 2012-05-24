@@ -356,10 +356,10 @@ fi
 # SAVI TB service
 # ----------------
 # Clone all enabled packages from SAVI repository
-#if is_service_enabled bloor ; then
+if is_service_enabled bloor ; then
     # SAVI TB web service
-#  cd $DEST;gitvi clone $BLOOR_PRJ
-#fi
+  cd $DEST;gitvi clone $BLOOR_PRJ
+fi
 
 # MySQL
 # ----------------
