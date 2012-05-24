@@ -356,23 +356,12 @@ fi
 # SAVI TB service
 # ----------------
 # Clone all enabled packages from SAVI repository
-if is_service_enabled bloor ; then
+#if is_service_enabled bloor ; then
     # SAVI TB web service
-  cd $DEST;gitvi clone $BLOOR_PRJ
-fi
+#  cd $DEST;gitvi clone $BLOOR_PRJ
+#fi
 
 # Mysql
-# -----
-if [[ ! -f ${MYSQL_FILE} ]]; then
-  echo "[${PROJECT}] There is no installed MySQL"
-  echo "[${PROJECT}] Installing MySQL"
-  sudo apt-get install mysql-server -y
-fi
-
-#sudo /etc/init.d/mysql stop
-#sudo mysqld --skip-grant-tables &
-
-# MySQL
 # ----------------
 if is_service_enabled mysql; then
 
@@ -401,29 +390,43 @@ EOF
 
     # Install and start mysql-server
     install_package mysql-server
-#    sudo mysql -uroot -p$MYSQL_PASSWORD -h127.0.0.1 -e "GRANT ALL PRIVILEGES ON *.* TO '$MYSQL_USER'@'%' identified by '$MYSQL_PASSWORD';"
-    sudo mysql -u root mysql -e "UPDATE user SET Password=PASSWORD('$MYSQL_PASSWORD') WHERE User='$MYSQL_USER'; FLUSH PRIVILEGES;"
-    echo "[${PROJECT}] Restarting MySQL"
-    sudo service $MYSQL start
-    echo "[${PROJECT}] Creating a database, aoncontroldb"
-    sudo mysql -u $MYSQL_USER -p $MYSQL_PASSWORD $SAVI_DATABASE < $SAVI_DBFILE
+    if [[ "$os_PACKAGE" = "rpm" ]]; then 
+        # RPM doesn't start the service
+        start_service mysqld
+        # Set the root password - only works the first time
+        sudo mysqladmin -u root password $MYSQL_PASSWORD || true 
+    fi   
+    # Update the DB to give user ‘$MYSQL_USER’@’%’ full control of the all databases:
+    sudo mysql -uroot -p$MYSQL_PASSWORD -h127.0.0.1 -e "GRANT ALL PRIVILEGES ON *.* TO '$MYSQL_USER'@'%' identified by '$MYSQL_PASSWORD';"
+
+    # Edit /etc/mysql/my.cnf to change ‘bind-address’ from localhost (127.0.0.1) to any (0.0.0.0) and restart the mysql service:
+    if [[ "$os_PACKAGE" = "deb" ]]; then 
+        MY_CNF=/etc/mysql/my.cnf
+        MYSQL=mysql
+    else 
+        MY_CNF=/etc/my.cnf
+        MYSQL=mysqld
+    fi   
+    sudo sed -i 's/127.0.0.1/0.0.0.0/g' $MY_CNF
+    restart_service $MYSQL
 fi
 
 # Build SAVI TB Projects
 # =============
 
 # Build all SAVI TB projects
-#cd $DEST/BLOOR_PRJ; ant dist
+cd $DEST/BLOOR_PRJ; ant dist
 
 # Execute it using screen
-#screen -S savi -X screen -t java -jar ${DEST}/${BLOOR_PRJ}/dist/bloor-${SAVI_VERSION}.jar
+screen -S savi -X screen -t java -jar ${DEST}/${BLOOR_PRJ}/dist/bloor-${SAVI_VERSION}.jar
+
 # Launch Services
 # ===============
 
 # Only run the services specified in ``ENABLED_SERVICES``
 
 # launch the bloor service
-#if is_service_enabled bloor; then
-#    screen_it bloor "cd ${DEST}/${BLOOR_PRJ}; java -jar dist/bloor-${SAVI_VERSION}.jar"
-#fi
+if is_service_enabled bloor; then
+    screen_it bloor "cd ${DEST}/${BLOOR_PRJ}; java -jar dist/bloor-${SAVI_VERSION}.jar"
+fi
 
