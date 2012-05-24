@@ -358,7 +358,7 @@ fi
 # Clone all enabled packages from SAVI repository
 if is_service_enabled bloor ; then
     # SAVI TB web service
-  cd $DEST;gitvi clone $BLOOR_PRJ
+  cd $DEST; export GITVI_USER=eliot; gitvi clone $BLOOR_PRJ
 fi
 
 # MySQL
@@ -415,7 +415,7 @@ fi
 # =============
 
 # Build all SAVI TB projects
-cd $DEST/BLOOR_PRJ; ant dist
+cd $DEST/$BLOOR_PRJ; ant dist
 
 # Execute it using screen
 screen -S savi -X screen -t java -jar ${DEST}/${BLOOR_PRJ}/dist/bloor-${SAVI_VERSION}.jar
