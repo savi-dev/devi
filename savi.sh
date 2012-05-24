@@ -361,7 +361,7 @@ fi
 #  cd $DEST;gitvi clone $BLOOR_PRJ
 #fi
 
-# Mysql
+# MySQL
 # ----------------
 if is_service_enabled mysql; then
 
