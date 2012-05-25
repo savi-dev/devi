@@ -358,7 +358,7 @@ fi
 # Clone all enabled packages from SAVI repository
 if is_service_enabled bloor ; then
     # SAVI TB web service
-  cd $DEST; export GITVI_USER=eliot; gitvi clone $BLOOR_PRJ
+  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $BLOOR_PRJ
 fi
 
 # MySQL
