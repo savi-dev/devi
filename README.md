@@ -23,7 +23,7 @@ IMPORTANT: Be sure to carefully read `savi.sh` and any other scripts you execute
 Installation
 ------------
 
-### Install VirtualBox and run a Virtual Machine (VM) with a Ubuntu 12.04 image
+## Install VirtualBox and run a Virtual Machine (VM) with a Ubuntu 12.04 image
 
 * Download and Install VirtualBox from https://www.virtualbox.org/wiki/Downloads
 * Download Ubuntu 12.04 image and unzip the image from http://virtualboxes.org/images/ubuntu/
@@ -65,21 +65,23 @@ The devi directory structure is as follow:
       + util
 
 
-* Download an Oracle JDK 7 from http://www.oracle.com/technetwork/java/javase/downloads/index.html to the 'util' folder.
-* Open a `savirc` file and modify `JAVA_*` variables based on your downloaded file.
-* Open a `savirc` file and set `GIT_USERNAME` and `GIT_EMAIL` of `review.savinetwork.ca`.
-* Create your ssh key and import your generated public key to the `review.savinetwork.ca`
-* Run a `savi.sh` in the devi.
+1. Download an Oracle JDK 7 to the `util` folder.
 
-    cd devi
-    ./savi.sh
+        http://www.oracle.com/technetwork/java/javase/downloads/index.html
+    
+2. Open a `savirc` file and modify `JAVA_*` variables based on your downloaded file.
+3. Open a `savirc` file and set `GIT_USERNAME` and `GIT_EMAIL` of `https://review.savinetwork.ca`.
+4. Create your ssh key and import your generated public key to the `https://review.savinetwork.ca`
+5. Run a `savi.sh` in the devi.
 
-* Devi installs all required software and SAVI testbed (TB) based on the settings in `localrc` and `savirc` and run a main SAVI control webservice using `screen`.
+        cd devi; ./savi.sh
+
+Devi installs all required software and SAVI testbed (TB) based on the settings in `localrc` and `savirc` and run a main SAVI control webservice using `screen`.
 
 ### Test a SAVI TB Control Webservice
 Open a web browser (Firefox) and go to the following URL.
 
-    http://localhost:9080/ws/ControlService?wsdl
+        http://localhost:9080/ws/ControlService?wsdl
 
 If you can see a WSDL, the SAVI TB Control Webservice works well.
 
