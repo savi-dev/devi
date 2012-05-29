@@ -66,9 +66,7 @@ The devi directory structure is as follow:
       + util
 
 
-1. Download an Oracle JDK 7 to the `util` folder.
-
-        http://www.oracle.com/technetwork/java/javase/downloads/index.html
+1. Download an Oracle JDK 7 to the `util` folder from http://www.oracle.com/technetwork/java/javase/downloads/index.html
     
 2. Open a `savirc` file and modify `JAVA_*` variables based on your downloaded file.
 3. Open a `savirc` file and set `GIT_USERNAME` and `GIT_EMAIL` of `https://review.savinetwork.ca`.
