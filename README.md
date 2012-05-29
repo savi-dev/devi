@@ -18,7 +18,7 @@ Goals
 * To run using screen
 * To test using examples
 
-IMPORTANT: Be sure to carefully read 'savi.sh' and any other scripts you execute before you run them, as they install software and may alter your networking configuration. We strongly recommend that you run 'savi.sh' in a clean and disposable vm when you are first getting started. Please, see the installation guide in this file.
+IMPORTANT: Be sure to carefully read `savi.sh` and any other scripts you execute before you run them, as they install software and may alter your networking configuration. We strongly recommend that you run `savi.sh` in a clean and disposable vm when you are first getting started. Please, see the installation guide in this file.
 
 Installation
 ------------
@@ -28,7 +28,7 @@ Installation
 * Download and Install VirtualBox from https://www.virtualbox.org/wiki/Downloads
 * Download Ubuntu 12.04 image and unzip the image from http://virtualboxes.org/images/ubuntu/
 * Create a new Virtual Machine using the unzipped .vdi file
-** You can select the unzipped vdi file when you create a VM.
+(You can select the unzipped vdi file when you create a VM)
 * Set RAM to 2048MB, and set networking to NAT mode
 * Turn VM on and login to it: username: ubuntu, password:reverse
 
@@ -65,6 +65,25 @@ The devi directory structure is as follow:
       + util
 
 
-* First, download an Oracle JDK 7 from http://www.oracle.com/technetwork/java/javase/downloads/index.html to the 'util' folder.
-* Second, open a 'savirc' file and modify JAVA_* variables based on your downloaded file.
+* Download an Oracle JDK 7 from http://www.oracle.com/technetwork/java/javase/downloads/index.html to the 'util' folder.
+* Open a `savirc` file and modify `JAVA_*` variables based on your downloaded file.
+* Open a `savirc` file and set `GIT_USERNAME` and `GIT_EMAIL` of `review.savinetwork.ca`.
+* Create your ssh key and import your generated public key to the `review.savinetwork.ca`
+* Run a `savi.sh` in the devi.
+
+    cd devi
+    ./savi.sh
+
+* Devi installs all required software and SAVI testbed (TB) based on the settings in `localrc` and `savirc` and run a main SAVI control webservice using `screen`.
+
+### Test a SAVI TB Control Webservice
+Open a web browser (Firefox) and go to the following URL.
+
+    http://localhost:9080/ws/ControlService?wsdl
+
+If you can see a WSDL, the SAVI TB Control Webservice works well.
+
+TO DO
+-----
+* Add project-specific configurations to `savirc`.
 
