@@ -302,6 +302,8 @@ if [[ ! -d ${JAVA_IHOME} ]]; then
     echo "export JAVA_HOME" >> $HOME/.bashrc
     echo "export PATH" >> $HOME/.bashrc
     source $HOME/.bashrc
+    export JAVA_HOME=$JAVA_IHOME
+    export PATH=$PATH:$JAVA_HOME/bin
   fi
 else
   echo "[${PROJECT}] There is an installed JAVA in $JAVA_INSTALL_DIR"
@@ -337,6 +339,8 @@ if [[ ! -d ${ANT_IHOME} ]]; then
     echo "export ANT_HOME" >> $HOME/.bashrc
     echo "export PATH" >> $HOME/.bashrc
     source $HOME/.bashrc
+    export ANT_HOME=$ANT_IHOME
+    export PATH=$PATH:$ANT_HOME/bin
   fi
 else
   echo "[${PROJECT}] There is an installed Ant in $ANT_INSTALL_DIR"
