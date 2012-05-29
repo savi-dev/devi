@@ -42,12 +42,28 @@ Installation
 
 
 ### Install Devi on the newly created VM
+The devi directory structure is as follow:
 
+      devi
+      |
+      + functions
+      |
+      + html
+        |
+        + localrc.html
+        |
+        + savi.html
+        |
+        + savirc.html
+      |
+      + localrc
+      |
+      + savirc
+      |
+      + savi.sh
+      |
+      + util
 
-
-  devi
-  |
-  + util
 
 * First, download an Oracle JDK 7 from http://www.oracle.com/technetwork/java/javase/downloads/index.html to the 'util' folder.
 * Second, open a 'savirc' file and modify JAVA_* variables based on your downloaded file.
