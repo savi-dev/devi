@@ -394,15 +394,22 @@ mkdir -p <span class="nv">$DEST</span>
 
 <h1>Install Packages</h1>
 
-<p>SAVI uses a fair number of other projects.
-Python</p>
+<p>SAVI uses a fair number of other projects.</p>
+
+<h2>Python</h2>
 
 </td><td class=code><div class=highlight><pre>
-<span class="nb">echo</span>
 <span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing a python tool&quot;</span>
-<span class="nb">echo</span>
 sudo apt-get install python -y
 sudo apt-get install python-setuptools -y
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>Screen</h2>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">echo</span> <span class="s2">&quot;[${PROJECT}] Installing a screen utility&quot;</span>
+sudo apt-get install screen -y
 
 </pre></div></td></tr><tr><td class=docs>
 
@@ -641,7 +648,7 @@ of having to specify the username/password each time.</p>
 <p>Update the DB to give user ‘$MYSQL_USER’@’%’ full control of the all databases:</p>
 
 </td><td class=code><div class=highlight><pre>
-    sudo mysql -uroot -p<span class="nv">$MYSQL_PASSWORD</span> -h127.0.0.1 -e <span class="s2">&quot;GRANT ALL PRIVILEGES ON *.* TO &#39;$MYSQL_USER&#39;@&#39;%&#39; identified by &#39;$MYSQL_PASSWORD&#39;;&quot;</span>
+    sudo mysql -u<span class="nv">$MYSQL_USER</span> -p<span class="nv">$MYSQL_PASSWORD</span> -h127.0.0.1 -e <span class="s2">&quot;GRANT ALL PRIVILEGES ON *.* TO &#39;$MYSQL_USER&#39;@&#39;%&#39; identified by &#39;$MYSQL_PASSWORD&#39;;&quot;</span>
 
 </pre></div></td></tr><tr><td class=docs>
 
@@ -661,6 +668,13 @@ of having to specify the username/password each time.</p>
 
 </pre></div></td></tr><tr><td class=docs>
 
+<p>Create a database specified in <code>SAVI_DATABASE</code> in <code>savirc</code> based on a dump file located in a yorkdale project.</p>
+
+</td><td class=code><div class=highlight><pre>
+mysql -u<span class="nv">$MYSQL_USER</span> -p<span class="nv">$MYSQL_PASSWORD</span> &lt; <span class="nv">$SAVI_DBFILE</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
 <h1>Build SAVI TB Projects</h1>
 
 </td><td class=code><div class=highlight><pre>
@@ -674,13 +688,6 @@ of having to specify the username/password each time.</p>
 
 </pre></div></td></tr><tr><td class=docs>
 
-<p>Execute it using screen</p>
-
-</td><td class=code><div class=highlight><pre>
-screen -S savi -X screen -t java -jar <span class="k">${</span><span class="nv">DEST</span><span class="k">}</span>/<span class="k">${</span><span class="nv">BLOOR_PRJ</span><span class="k">}</span>/dist/bloor-<span class="k">${</span><span class="nv">SAVI_VERSION</span><span class="k">}</span>.jar
-
-</pre></div></td></tr><tr><td class=docs>
-
 <h1>Launch Services</h1>
 
 </td><td class=code><div class=highlight><pre>
@@ -688,6 +695,99 @@ screen -S savi -X screen -t java -jar <span class="k">${</span><span class="nv">
 </pre></div></td></tr><tr><td class=docs>
 
 <p>Only run the services specified in <code>ENABLED_SERVICES</code></p>
+
+</td><td class=code><div class=highlight><pre>
+
+<span class="k">if</span> <span class="o">[</span> -z <span class="s2">&quot;$SCREEN_HARDSTATUS&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">    </span><span class="nv">SCREEN_HARDSTATUS</span><span class="o">=</span><span class="s1">&#39;%{= .} %-Lw%{= .}%&gt; %n%f %t*%{= .}%+Lw%&lt; %-=%{g}(%{d}%H/%l%{g})&#39;</span>
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>These two function <code>screen_rc</code> and <code>screen_it</code> from 'stack.sh' in devStack.
+Our screenrc file builder</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">function </span>screen_rc <span class="o">{</span>
+    <span class="nv">SCREENRC</span><span class="o">=</span><span class="nv">$TOP_DIR</span>/savi-screenrc
+    <span class="k">if</span> <span class="o">[[</span> ! -e <span class="nv">$SCREENRC</span> <span class="o">]]</span>; <span class="k">then</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Name the screen session</p>
+
+</td><td class=code><div class=highlight><pre>
+        <span class="nb">echo</span> <span class="s2">&quot;sessionname savi&quot;</span> &gt; <span class="nv">$SCREENRC</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Set a reasonable statusbar</p>
+
+</td><td class=code><div class=highlight><pre>
+        <span class="nb">echo</span> <span class="s2">&quot;hardstatus alwayslastline &#39;$SCREEN_HARDSTATUS&#39;&quot;</span> &gt;&gt; <span class="nv">$SCREENRC</span>
+        <span class="nb">echo</span> <span class="s2">&quot;screen -t savi bash&quot;</span> &gt;&gt; <span class="nv">$SCREENRC</span>
+    <span class="k">fi</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>If this service doesn't already exist in the screenrc file</p>
+
+</td><td class=code><div class=highlight><pre>
+    <span class="k">if</span> ! grep <span class="nv">$1</span> <span class="nv">$SCREENRC</span> 2&gt;&amp;1 &gt; /dev/null; <span class="k">then</span>
+<span class="k">        </span><span class="nv">NL</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> -ne <span class="s1">&#39;\015&#39;</span><span class="sb">`</span>
+        <span class="nb">echo</span> <span class="s2">&quot;screen -t $1 bash&quot;</span> &gt;&gt; <span class="nv">$SCREENRC</span>
+        <span class="nb">echo</span> <span class="s2">&quot;stuff \&quot;$2$NL\&quot;&quot;</span> &gt;&gt; <span class="nv">$SCREENRC</span>
+    <span class="k">fi</span>
+<span class="o">}</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Our screen helper to launch a service in a hidden named screen</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">function </span>screen_it <span class="o">{</span>
+    <span class="nv">NL</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> -ne <span class="s1">&#39;\015&#39;</span><span class="sb">`</span>
+    <span class="k">if </span>is_service_enabled <span class="nv">$1</span>; <span class="k">then</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Append the service to the screen rc file</p>
+
+</td><td class=code><div class=highlight><pre>
+        screen_rc <span class="s2">&quot;$1&quot;</span> <span class="s2">&quot;$2&quot;</span>
+
+        screen -S savi -X screen -t <span class="nv">$1</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>sleep to allow bash to be ready to be send the command - we are
+creating a new window in screen and then sends characters, so if
+bash isn't running by the time we send the command, nothing happens</p>
+
+</td><td class=code><div class=highlight><pre>
+        sleep 1.5
+
+        <span class="k">if</span> <span class="o">[[</span> -n <span class="k">${</span><span class="nv">SCREEN_LOGDIR</span><span class="k">}</span> <span class="o">]]</span>; <span class="k">then</span>
+<span class="k">            </span>screen -S savi -p <span class="nv">$1</span> -X logfile <span class="k">${</span><span class="nv">SCREEN_LOGDIR</span><span class="k">}</span>/screen-<span class="k">${</span><span class="nv">1</span><span class="k">}</span>.<span class="k">${</span><span class="nv">CURRENT_LOG_TIME</span><span class="k">}</span>.log
+            screen -S savi -p <span class="nv">$1</span> -X log on
+            ln -sf <span class="k">${</span><span class="nv">SCREEN_LOGDIR</span><span class="k">}</span>/screen-<span class="k">${</span><span class="nv">1</span><span class="k">}</span>.<span class="k">${</span><span class="nv">CURRENT_LOG_TIME</span><span class="k">}</span>.log <span class="k">${</span><span class="nv">SCREEN_LOGDIR</span><span class="k">}</span>/screen-<span class="k">${</span><span class="nv">1</span><span class="k">}</span>.log
+        <span class="k">fi</span>
+<span class="k">        </span>screen -S savi -p <span class="nv">$1</span> -X stuff <span class="s2">&quot;$2$NL&quot;</span>
+    <span class="k">fi</span>
+<span class="o">}</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>create a new named screen to run processes in</p>
+
+</td><td class=code><div class=highlight><pre>
+screen -d -m -S savi -t savi -s /bin/bash
+sleep 1
+</pre></div></td></tr><tr><td class=docs>
+
+<p>set a reasonable statusbar</p>
+
+</td><td class=code><div class=highlight><pre>
+screen -r savi -X hardstatus alwayslastline <span class="s2">&quot;$SCREEN_HARDSTATUS&quot;</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>SAVI TB Control Service</h2>
 
 </td><td class=code><div class=highlight><pre>
 
@@ -699,7 +799,6 @@ screen -S savi -X screen -t java -jar <span class="k">${</span><span class="nv">
 <span class="k">if </span>is_service_enabled bloor; <span class="k">then</span>
 <span class="k">    </span>screen_it bloor <span class="s2">&quot;cd ${DEST}/${BLOOR_PRJ}; java -jar dist/bloor-${SAVI_VERSION}.jar&quot;</span>
 <span class="k">fi</span>
-
 
 
 </pre></div></td></tr><tr><td class=docs>
