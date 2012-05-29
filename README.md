@@ -31,6 +31,7 @@ Installation
 (You can select the unzipped vdi file when you create a VM)
 * Set RAM to 2048MB, and set networking to NAT mode
 * Turn VM on and login to it: username: ubuntu, password:reverse
+* Change the keyboard setting from Italian to English. (System Settings->Keyboard Layout).
 
 ### Install Git
 
