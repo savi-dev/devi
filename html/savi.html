@@ -569,14 +569,14 @@ Download and install Apache Ivy.</p>
 <p>Clone all enabled packages from SAVI repository</p>
 
 </td><td class=code><div class=highlight><pre>
-<span class="c">#if is_service_enabled bloor ; then</span>
+<span class="k">if </span>is_service_enabled bloor ; <span class="k">then</span>
 </pre></div></td></tr><tr><td class=docs>
 
-<p>SAVI TB web service
- cd $DEST;gitvi clone $BLOOR_PRJ</p>
+<p>SAVI TB web service</p>
 
 </td><td class=code><div class=highlight><pre>
-<span class="c">#fi</span>
+  <span class="nb">cd</span> <span class="nv">$DEST</span>; <span class="nb">export </span><span class="nv">GITVI_USER</span><span class="o">=</span><span class="nv">$GIT_USERNAME</span>; gitvi clone <span class="nv">$BLOOR_PRJ</span>
+<span class="k">fi</span>
 
 </pre></div></td></tr><tr><td class=docs>
 
@@ -670,7 +670,7 @@ of having to specify the username/password each time.</p>
 <p>Build all SAVI TB projects</p>
 
 </td><td class=code><div class=highlight><pre>
-<span class="nb">cd</span> <span class="nv">$DEST</span>/BLOOR_PRJ; ant dist
+<span class="nb">cd</span> <span class="nv">$DEST</span>/<span class="nv">$BLOOR</span>; ant dist
 
 </pre></div></td></tr><tr><td class=docs>
 
