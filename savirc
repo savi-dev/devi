@@ -57,7 +57,7 @@ MYSQL_USER=root
 MYSQL_PASSWORD=Canada24
 MYSQL_FILE=/etc/init.d/mysql
 SAVI_DATABASE=aoncontroldb
-SAVI_DBFILE=$DEST/yorkdale/aoncontroldb.sql
+SAVI_DBFILE=$DEST/yorkdale/resources/aoncontroldb.sql
 
 # Specify which services to launch.  These generally correspond to
 # screen tabs. If you like to add other services that are not enabled

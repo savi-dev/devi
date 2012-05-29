@@ -229,11 +229,15 @@ fi
 #
 # SAVI uses a fair number of other projects.
 # Python
-echo
+# ------
 echo "[${PROJECT}] Installing a python tool"
-echo
 sudo apt-get install python -y
 sudo apt-get install python-setuptools -y
+
+# Screen
+# ------
+echo "[${PROJECT}] Installing a screen utility"
+sudo apt-get install screen -y
 
 # Yak tool
 # ----------------
@@ -397,7 +401,7 @@ EOF
         sudo mysqladmin -u root password $MYSQL_PASSWORD || true 
     fi   
     # Update the DB to give user ‘$MYSQL_USER’@’%’ full control of the all databases:
-    sudo mysql -uroot -p$MYSQL_PASSWORD -h127.0.0.1 -e "GRANT ALL PRIVILEGES ON *.* TO '$MYSQL_USER'@'%' identified by '$MYSQL_PASSWORD';"
+    sudo mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h127.0.0.1 -e "GRANT ALL PRIVILEGES ON *.* TO '$MYSQL_USER'@'%' identified by '$MYSQL_PASSWORD';"
 
     # Edit /etc/mysql/my.cnf to change ‘bind-address’ from localhost (127.0.0.1) to any (0.0.0.0) and restart the mysql service:
     if [[ "$os_PACKAGE" = "deb" ]]; then 
@@ -411,22 +415,75 @@ EOF
     restart_service $MYSQL
 fi
 
+# Create a database specified in `SAVI_DATABASE` in `savirc` based on a dump file located in a yorkdale project.
+mysql -u$MYSQL_USER -p$MYSQL_PASSWORD < $SAVI_DBFILE
+
 # Build SAVI TB Projects
 # =============
 
 # Build all SAVI TB projects
 cd $DEST/$BLOOR; ant dist
 
-# Execute it using screen
-screen -S savi -X screen -t java -jar ${DEST}/${BLOOR_PRJ}/dist/bloor-${SAVI_VERSION}.jar
-
 # Launch Services
 # ===============
 
 # Only run the services specified in ``ENABLED_SERVICES``
 
+if [ -z "$SCREEN_HARDSTATUS" ]; then
+    SCREEN_HARDSTATUS='%{= .} %-Lw%{= .}%> %n%f %t*%{= .}%+Lw%< %-=%{g}(%{d}%H/%l%{g})'
+fi
+
+# These two function `screen_rc` and `screen_it` from 'stack.sh' in devStack.
+# Our screenrc file builder
+function screen_rc {
+    SCREENRC=$TOP_DIR/savi-screenrc
+    if [[ ! -e $SCREENRC ]]; then
+        # Name the screen session
+        echo "sessionname savi" > $SCREENRC
+        # Set a reasonable statusbar
+        echo "hardstatus alwayslastline '$SCREEN_HARDSTATUS'" >> $SCREENRC
+        echo "screen -t savi bash" >> $SCREENRC
+    fi
+    # If this service doesn't already exist in the screenrc file
+    if ! grep $1 $SCREENRC 2>&1 > /dev/null; then
+        NL=`echo -ne '\015'`
+        echo "screen -t $1 bash" >> $SCREENRC
+        echo "stuff \"$2$NL\"" >> $SCREENRC
+    fi
+}
+
+# Our screen helper to launch a service in a hidden named screen
+function screen_it {
+    NL=`echo -ne '\015'`
+    if is_service_enabled $1; then
+        # Append the service to the screen rc file
+        screen_rc "$1" "$2"
+
+        screen -S savi -X screen -t $1
+        # sleep to allow bash to be ready to be send the command - we are
+        # creating a new window in screen and then sends characters, so if
+        # bash isn't running by the time we send the command, nothing happens
+        sleep 1.5
+
+        if [[ -n ${SCREEN_LOGDIR} ]]; then
+            screen -S savi -p $1 -X logfile ${SCREEN_LOGDIR}/screen-${1}.${CURRENT_LOG_TIME}.log
+            screen -S savi -p $1 -X log on
+            ln -sf ${SCREEN_LOGDIR}/screen-${1}.${CURRENT_LOG_TIME}.log ${SCREEN_LOGDIR}/screen-${1}.log
+        fi
+        screen -S savi -p $1 -X stuff "$2$NL"
+    fi
+}
+
+# create a new named screen to run processes in
+screen -d -m -S savi -t savi -s /bin/bash
+sleep 1
+# set a reasonable statusbar
+screen -r savi -X hardstatus alwayslastline "$SCREEN_HARDSTATUS"
+
+# SAVI TB Control Service
+# ------------------------
+
 # launch the bloor service
 if is_service_enabled bloor; then
     screen_it bloor "cd ${DEST}/${BLOOR_PRJ}; java -jar dist/bloor-${SAVI_VERSION}.jar"
 fi
-
