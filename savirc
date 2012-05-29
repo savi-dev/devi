@@ -21,7 +21,7 @@ JAVA_VERSION=7
 JAVA_DIR=jdk1.7.0_04
 JAVA_PKG_NAME=jdk-7u4-linux-i586.tar.gz
 JAVA_INSTALL_DIR=/usr/local/java
-JAVA_IHOME=${JAVA_INSTALL_DIR}/jdk1.7.0_04
+JAVA_IHOME=${JAVA_INSTALL_DIR}
 
 # Utility directory
 UTIL_DIR=util
