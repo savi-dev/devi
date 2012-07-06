@@ -78,31 +78,19 @@ CHEETAH_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/cheetah
 CHEETAH_BRANCH=master
 
 # Hardware resource service
+HORSE=horse
 HORSE_PRJ=savi/horse
 HORSE_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/horse
 HORSE_BRANCH=master
 
-# Processing resource service
-COALA_PRJ=savi/coala
-COALA_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/coala
-COALA_BRANCH=master
-
 # SAVI CLI Client
+KING=king
 KING_PRJ=savi/king
 KING_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/king
 KING_BRANCH=master
 
-# Processing CLI Client
-QUEEN_PRJ=savi/queen
-QUEEN_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/queen
-QUEEN_BRANCH=master
-
-# Gateway CLI Client
-DUNDAS_PRJ=savi/dundas
-DUNDAS_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/dundas
-DUNDAS_BRANCH=master
-
 # Hardware CLI Client
+COLLEGE=college
 COLLEGE_PRJ=savi/college
 COLLEGE_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/college
 COLLEGE_BRANCH=master
