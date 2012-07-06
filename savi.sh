@@ -368,7 +368,18 @@ if is_service_enabled bloor ; then
     # SAVI TB web service
   cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $BLOOR_PRJ
 fi
-
+if is_service_enabled horse ; then
+    # SAVI HW Resource web service
+  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $HORSE_PRJ
+fi
+if is_service_enabled king ; then
+    # SAVI TB CLI client
+  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $KING_PRJ
+fi
+if is_service_enabled college ; then
+    # SAVI HW Resource CLI client
+  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $COLLEGE_PRJ
+fi
 # MySQL
 # ----------------
 if is_service_enabled mysql; then
@@ -426,7 +437,18 @@ mysql -u$MYSQL_USER -p$MYSQL_PASSWORD < $SAVI_DBFILE
 # =============
 
 # Build all SAVI TB projects
-cd $DEST/$BLOOR; ant dist
+if is_service_enabled bloor ; then
+    cd $DEST/$BLOOR; ant dist
+fi
+if is_service_enabled horse ; then
+    cd $DEST/$HORSE; ant dist
+fi
+if is_service_enabled king ; then
+    cd $DEST/$KING; ant dist
+fi
+if is_service_enabled college ; then
+    cd $DEST/$COLLEGE; ant dist
+fi
 
 # Launch Services
 # ===============
