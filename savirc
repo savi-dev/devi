@@ -63,7 +63,7 @@ SAVI_DBFILE=$DEST/yorkdale/resources/savicontroldb.sql
 # screen tabs. If you like to add other services that are not enabled
 # by default you can append them in your ENABLED_SERVICES variable in
 # your localrc.
-ENABLED_SERVICES=bloor,king,horse,college,mysql
+ENABLED_SERVICES=cheetah,king,horse,college,mysql
 
 # SAVI TB control center main
 BLOOR=bloor
