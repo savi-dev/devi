@@ -364,9 +364,9 @@ fi
 # SAVI TB service
 # ----------------
 # Clone all enabled packages from SAVI repository
-if is_service_enabled bloor ; then
+if is_service_enabled cheetah ; then
     # SAVI TB web service
-  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $BLOOR_PRJ
+  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $CHEETAH_PRJ
 fi
 if is_service_enabled horse ; then
     # SAVI HW Resource web service
@@ -437,8 +437,8 @@ mysql -u$MYSQL_USER -p$MYSQL_PASSWORD < $SAVI_DBFILE
 # =============
 
 # Build all SAVI TB projects
-if is_service_enabled bloor ; then
-    cd $DEST/$BLOOR; ant dist
+if is_service_enabled cheetah ; then
+    cd $DEST/$CHEETAH; ant dist
 fi
 if is_service_enabled horse ; then
     cd $DEST/$HORSE; ant dist
@@ -510,6 +510,9 @@ screen -r savi -X hardstatus alwayslastline "$SCREEN_HARDSTATUS"
 # ------------------------
 
 # launch the bloor service
-if is_service_enabled bloor; then
-    screen_it bloor "cd ${DEST}/${BLOOR_PRJ}; java -jar dist/bloor-${SAVI_VERSION}.jar"
+if is_service_enabled cheetah; then
+    screen_it cheetah "cd ${DEST}/${CHEETAH_PRJ}; java -jar dist/cheetah-0.2.jar"
+fi
+if is_service_enabled horse; then
+    screen_it horse "cd ${DEST}/${HORSE_PRJ}; java -jar dist/horse-0.1.jar"
 fi
