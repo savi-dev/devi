@@ -511,8 +511,8 @@ screen -r savi -X hardstatus alwayslastline "$SCREEN_HARDSTATUS"
 
 # launch the bloor service
 if is_service_enabled cheetah; then
-    screen_it cheetah "cd ${DEST}/${CHEETAH_PRJ}; java -jar dist/cheetah-0.2.jar"
+    screen_it cheetah "cd ${DEST}/${CHEETAH}; java -jar dist/cheetah-0.2.jar"
 fi
 if is_service_enabled horse; then
-    screen_it horse "cd ${DEST}/${HORSE_PRJ}; java -jar dist/horse-0.1.jar"
+    screen_it horse "cd ${DEST}/${HORSE}; java -jar dist/horse-0.1.jar"
 fi
