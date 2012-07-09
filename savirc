@@ -19,7 +19,7 @@ SAVI_RELEASE_SITE=http://release.savinetwork.ca/releases
 # Specify java
 JAVA_VERSION=7
 JAVA_DIR=jdk1.7.0_05
-JAVA_PKG_NAME=jdk-7u5-linux-i586.tar.gz
+JAVA_PKG_NAME=jdk-7u5-linux-x64.tar.gz
 JAVA_INSTALL_DIR=/usr/local/java
 JAVA_IHOME=${JAVA_INSTALL_DIR}
 
