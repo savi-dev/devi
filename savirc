@@ -47,7 +47,7 @@ IVY_VERSION=2.3.0-rc1
 IVY_DIR=apache-ivy-${IVY_VERSION}
 IVY_PKG_FILE=apache-ivy-${IVY_VERSION}-bin.tar.gz
 IVY_FILE=ivy-${IVY_VERSION}.jar
-IVY_ADDRESS=http://www.quickprepaidcard.com/apache//ant/ivy/2.3.0-rc1/apache-ivy-2.3.0-rc1-bin.tar.gz
+IVY_ADDRESS=http://apache.mirror.iweb.ca//ant/ivy/2.3.0-rc1/apache-ivy-2.3.0-rc1-bin.tar.gz
 IVY_FULLFILE=${UTIL_DIR}/${IVY_PKG_FILE}
 IVY_INSTALL_DIR=$ANT_IHOME/lib
 
