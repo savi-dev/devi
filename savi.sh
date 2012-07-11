@@ -381,6 +381,9 @@ fi
 if [[ $KEYSTONE_ENDPOINT ]]; then
   mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$KEYSTONE_ENDPOINT' WHERE r.name='Keystone'";
 fi
+if [[ $NOVA_ENDPOINT ]]; then
+  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$NOVA_ENDPOINT' WHERE r.name='Nova'";
+fi
 if [[ $GLANCE_ENDPOINT ]]; then
   mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$GLANCE_ENDPOINT' WHERE r.name='Glance'";
 fi

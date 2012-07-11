@@ -20,29 +20,14 @@ Goals
 
 IMPORTANT: Be sure to carefully read `savi.sh` and any other scripts you execute before you run them, as they install software and may alter your networking configuration. We strongly recommend that you run `savi.sh` in a clean and disposable vm when you are first getting started. Please, see the installation guide in this file.
 
+This version is only tested on Ubuntu 12.04. Use other versions at your risk.
+
 Installation
 ------------
+### Prerequisites
+Before installing devi, you have to install openstack using `devstack` in your machine.
 
-## Install VirtualBox and run a Virtual Machine (VM) with a Ubuntu 12.04 image
-
-* Download and Install VirtualBox from https://www.virtualbox.org/wiki/Downloads
-* Download Ubuntu 12.04 image and unzip the image from http://virtualboxes.org/images/ubuntu/
-* Create a new Virtual Machine using the unzipped .vdi file
-(You can select the unzipped vdi file when you create a VM)
-* Set RAM to 2048MB, and set networking to NAT mode
-* Turn VM on and login to it: username: ubuntu, password:reverse
-* Change the keyboard setting from Italian to English. (System Settings->Keyboard Layout).
-
-### Install Git
-
-    sudo apt-get install git -y
-
-### Clone devi from github
-
-    git clone https://github.com/savi-dev/devi.git
-
-
-### Install Devi on the newly created VM
+### How to install SAVI Testbed Control
 The devi directory structure is as follow:
 
       devi
@@ -63,19 +48,28 @@ The devi directory structure is as follow:
       |
       + savi.sh
       |
+      + samples
+        |
+        + localrc
+        |
+        + of
+          |
+          + devi-localrc
+          |
+          + gen-local.sh
+      |
       + util
 
+In project's root folder, run:
 
-1. Download an Oracle JDK 7 to the `util` folder from http://www.oracle.com/technetwork/java/javase/downloads/index.html
-    
-2. Open a `savirc` file and modify `JAVA_*` variables based on your downloaded file.
-3. Open a `savirc` file and set `GIT_USERNAME` and `GIT_EMAIL` of `https://review.savinetwork.ca`.
-4. Create your ssh key and import your generated public key to the `https://review.savinetwork.ca`
-5. Run a `savi.sh` in the devi.
+    samples/of/gen-local.sh
 
-        cd devi; ./savi.sh
+This scripts asks for some parameters, and generates the localrc for you. Then,
+run devi to complete the installation:
 
-Devi installs all required software and SAVI testbed (TB) based on the settings in `localrc` and `savirc` and run a main SAVI control webservice using `screen`.
+    ./savi.sh
+
+Devi installs all required software and SAVI Testbed (TB) based on the settings in `localrc` and `savirc` and run a main SAVI control webservice using `screen`.
 
 ### Test a SAVI TB Control Webservice
 Open a web browser (Firefox) and go to the following URL.
@@ -84,7 +78,79 @@ Open a web browser (Firefox) and go to the following URL.
 
 If you can see a WSDL, the SAVI TB Control Webservice works well.
 
-TO DO
------
-* Add project-specific configurations to `savirc`.
+# Example Setup
 
+Suppose that we have a Control webservice, one resource webservice, Hardware,
+and Openstack for cloud.
+
+    @@@@@@@@@ Control @@@@@@@@    @@@@@@ Hardware @@@@@@
+    |                        |----|9090 port           |
+    |9080 port               |    @@@@@@@@@@@@@@@@@@@@@@
+    |                        |
+    |                        |    @@@@@ Openstack @@@@@@
+    |                        |----|Identity            |
+    |                        |----|Compute             |
+    |                        |----|Storage             |
+    |                        |----|Network             |
+    |                        |----|Image               |
+    @@@@@@@@@@@@@@@@@@@@@@@@@@    @@@@@@@@@@@@@@@@@@@@@@
+
+## Install devi
+
+Run:
+
+    samples/of/gen-local.sh
+
+For our example, answer the question as below:
+
+    Where is the installed folder? [/home/savi/devstack] 
+    <devstack installation dir> 
+    Please enter a root password for MySQL:
+    <mysql password>
+    What is your username for SAVI GIT?
+    sample
+    What is your username for SAVI GIT?
+    sample
+    What is your email address for SAVI GIT?
+    sample@sample.org
+    What is an endpoint for Hardware webservice? [http://localhost:9090/ws/HardwareWebService]
+    <hardware webservice endpoint>	
+    What is an endpoint for Hardware webservice? [http://localhost:9090/ws/HardwareWebService]
+    <nova_endpoint>
+    What is an endpoint for Storage? [http://192.168.123.201:8080/v1/AUTH_45ea9b19c3d94ad7887f64faa9d35faf]
+    <swift endpoint>
+    What is an endpoint for Identity? [http://192.168.123.201:35357/v2.0]
+    <keystone endpoint>
+    What is an endpoint for Image? [http://192.168.123.201:9292]
+    <glance endpoint>
+    What is an endpoint for Network? [http://192.168.123.201:9696/]
+    <quantum endpoint>
+    localrc generated for devi
+    Now run ./savi.sh
+
+## Test SAVI TB Control
+In the installed folder of savi, go to the king/script,
+
+### Authentication
+
+* Get token
+
+Run:
+
+    savi_get_token
+
+### Storage
+
+* Get file
+
+Run
+
+    savi_get_file
+
+
+* Put file
+
+    savi_put_file
+
+### Hardware
+(TBD)
