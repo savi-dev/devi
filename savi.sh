@@ -270,33 +270,23 @@ git config --global user.email ${GIT_EMAIL}
 # JDK
 # ----------------
 # Java Development Kit
-# **Warning**: Download Oracle Java 7 from http://www.oracle.com/technetwork/java/javase/downloads/index.html.
 echo "[${PROJECT}] Installing JDK"
 if [[ ! -d ${JAVA_IHOME} ]]; then
   echo "[${PROJECT}] Removing openjdk-6 if there is an installed openjdk."
   sudo apt-get autoremove openjdk-6-jre-headless
-  echo "[${PROJECT}] Downloading Oracle java 7"
-  if [[ ! -f ${TOP_DIR}/${UTIL_DIR}/${JAVA_PKG_NAME} ]]; then
-    echo "[${PROJECT}] There is no ${JAVA_PKG_NAME} in ${TOP_DIR}/${UTIL_DIR}"
-    echo "[${PROJECT}] Please, download JDK-${JAVA_VERSION} from http://www.oracle.com/technetwork/java/javase/downloads/index.html"
-    exit 1;
-  fi
+
+  sudo apt-get install python-software-properties -y
+  sudo add-apt-repository ppa:webupd8team/java -y
+  sudo apt-get update
+  sudo apt-get install ${JAVA_PKG} -y
 
   # If there is an installed JDK, skip this process.
-  echo "[${PROJECT}] Checking an installed JDK"
-  if [[ ! -d ${JAVA_IHOME} ]]; then
-    echo "[${PROJECT}] Copying ${JAVA_PKG_NAME} to ${JAVA_INSTALL_DIR}"
-    cd ${TOP_DIR}/${UTIL_DIR}; tar xvzf ${JAVA_PKG_NAME}; sudo mv ${JAVA_DIR} ${JAVA_INSTALL_DIR}
-  fi
-
   # If a JAVA_HOME environment variable is different to the installed JAVA, add it to a .bashrc file.
   if [[ "$JAVA_IHOME" = "$JAVA_HOME" ]]; then
     echo "[${PROJECT}] JAVA_HOME is set and same to the installed one."
   else
     echo "[${PROJECT}] JAVA_HOME is set but different to the installed one."
     echo "[${PROJECT}] JAVA_HOME and PATH in .bashrc are changing..."
-    echo "" >> $HOME/.bashrc
-    echo "# Setting JAVA_HOME" >> $HOME/.bashrc
     echo "JAVA_HOME=$JAVA_IHOME" >> $HOME/.bashrc
     echo "PATH=\$PATH:\$JAVA_HOME/bin" >> $HOME/.bashrc
     echo "export JAVA_HOME" >> $HOME/.bashrc
@@ -380,58 +370,26 @@ if is_service_enabled college ; then
     # SAVI HW Resource CLI client
   cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $COLLEGE_PRJ
 fi
-# MySQL
-# ----------------
-if is_service_enabled mysql; then
-
-    if [[ "$os_PACKAGE" = "deb" ]]; then
-        # Seed configuration with mysql password so that apt-get install doesn't
-        # prompt us for a password upon install.
-        cat <<MYSQL_PRESEED | sudo debconf-set-selections
-mysql-server-5.1 mysql-server/root_password password $MYSQL_PASSWORD
-mysql-server-5.1 mysql-server/root_password_again password $MYSQL_PASSWORD
-mysql-server-5.1 mysql-server/start_on_boot boolean true
-MYSQL_PRESEED
-    fi
-
-    # while ``.my.cnf`` is not needed for SAVI to function, it is useful
-    # as it allows you to access the mysql databases via ``mysql nova`` instead
-    # of having to specify the username/password each time.
-    if [[ ! -e $HOME/.my.cnf ]]; then
-        cat <<EOF >$HOME/.my.cnf
-[client]
-user=$MYSQL_USER
-password=$MYSQL_PASSWORD
-host=$MYSQL_HOST
-EOF
-        chmod 0600 $HOME/.my.cnf
-    fi
-
-    # Install and start mysql-server
-    install_package mysql-server
-    if [[ "$os_PACKAGE" = "rpm" ]]; then 
-        # RPM doesn't start the service
-        start_service mysqld
-        # Set the root password - only works the first time
-        sudo mysqladmin -u root password $MYSQL_PASSWORD || true 
-    fi   
-    # Update the DB to give user ‘$MYSQL_USER’@’%’ full control of the all databases:
-    sudo mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -h127.0.0.1 -e "GRANT ALL PRIVILEGES ON *.* TO '$MYSQL_USER'@'%' identified by '$MYSQL_PASSWORD';"
-
-    # Edit /etc/mysql/my.cnf to change ‘bind-address’ from localhost (127.0.0.1) to any (0.0.0.0) and restart the mysql service:
-    if [[ "$os_PACKAGE" = "deb" ]]; then 
-        MY_CNF=/etc/mysql/my.cnf
-        MYSQL=mysql
-    else 
-        MY_CNF=/etc/my.cnf
-        MYSQL=mysqld
-    fi   
-    sudo sed -i 's/127.0.0.1/0.0.0.0/g' $MY_CNF
-    restart_service $MYSQL
-fi
 
 # Create a database specified in `SAVI_DATABASE` in `savirc` based on a dump file located in a yorkdale project.
 mysql -u$MYSQL_USER -p$MYSQL_PASSWORD < $SAVI_DBFILE
+
+# Update all endpoints into DB
+if [[ $HARDWARE_ENDPOINT ]]; then
+  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$HARDWARE_ENDPOINT' WHERE r.name='Hardware'";
+fi
+if [[ $KEYSTONE_ENDPOINT ]]; then
+  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$KEYSTONE_ENDPOINT' WHERE r.name='Keystone'";
+fi
+if [[ $GLANCE_ENDPOINT ]]; then
+  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$GLANCE_ENDPOINT' WHERE r.name='Glance'";
+fi
+if [[ $QUANTUM_ENDPOINT ]]; then
+  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$QUANTUM_ENDPOINT' WHERE r.name='Quantum'";
+fi
+if [[ $SWIFT_ENDPOINT ]]; then
+  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$SWIFT_ENDPOINT' WHERE r.name='Swift'";
+fi
 
 # Build SAVI TB Projects
 # =============

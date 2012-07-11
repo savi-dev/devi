@@ -1,4 +1,6 @@
 # ``savirc`` for SAVI Testbed project configurable variables in ``savi.sh``
+# Find the other rc files
+RC_DIR=$(cd $(dirname "$BASH_SOURCE") && pwd)
 
 # Set a project name and version.
 PROJECT=DEVI
@@ -10,18 +12,16 @@ SAVI_VERSION=0.1
 DEST=$HOME/savitest
 
 # Set git user name in savinetwork.ca
-GIT_USERNAME=eliot
-GIT_EMAIL=eliot@savinetwork.ca
+GIT_USERNAME=sample
+GIT_EMAIL=sample@savinetwork.ca
 
 # SAVI TB Release Site
 SAVI_RELEASE_SITE=http://release.savinetwork.ca/releases
 
 # Specify java
 JAVA_VERSION=7
-JAVA_DIR=jdk1.7.0_05
-JAVA_PKG_NAME=jdk-7u5-linux-x64.tar.gz
-JAVA_INSTALL_DIR=/usr/local/java
-JAVA_IHOME=${JAVA_INSTALL_DIR}
+JAVA_IHOME=/usr/lib/jvm/java-${JAVA_VERSION}-oracle
+JAVA_PKG=oracle-java${JAVA_VERSION}-installer
 
 # Utility directory
 UTIL_DIR=util
@@ -94,3 +94,8 @@ COLLEGE=college
 COLLEGE_PRJ=savi/college
 COLLEGE_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/college
 COLLEGE_BRANCH=master
+
+# allow local overrides of env variables
+if [ -f $RC_DIR/localrc ]; then
+    source $RC_DIR/localrc
+fi
