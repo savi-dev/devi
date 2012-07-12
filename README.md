@@ -129,30 +129,112 @@ For our example, answer the question as below:
     Now run ./savi.sh
 
 ## Test SAVI TB Control
-In the installed folder of savi, go to the king/script,
+In the installed folder of savi (`~/savitest`), go to the king/script,
 
+**NOTE**: For your convenience, devi provides screens for executing scripts. If you are familiar with `screen', you can see clients by running the following command:
+
+    screen -r savi
+
+king is a client for SAVI TB Control and college is a client for Hardware resource.
+
+First of all, you have to run the following command for setting environment variables for scripts. You can edit it for your test.
+
+    source savi_env.sh
+
+There are following environment variables.
+
+    CONTROL_WSDL: SAVI TB Control Webservice address
+    SAVI_JAR: SAVI TB Control client jar file path
+    SAVI_USER: SAVI TB Control user name
+    SAVI_PASSWORD: SAVI TB Control password for the given user
+    SAVI_TOKEN: SAVI TB Control token for the given user and password
+    SAVI_PROJECT: SAVI TB Control project name
+    SAVI_Location: SAVI TB Control node location name
+ 
 ### Authentication
 
-* Get token
-
-Run:
+In order to get a token from SAVI TB Control, run:
 
     savi_get_token
 
+It returns a token and expiration date for the given user.
+
+    http://localhost:9080/ws/ControlService?wsdl
+    Token : 9fa6d779481b4ed7ba3820d1fd76eb1a
+    ExpirationDate : null
+    Auth is  successful
+
 ### Storage
 
-* Get file
+1. Put a file to storage
 
-Run
+    savi_put_file <token> <filename> <expired time>
 
-    savi_get_file
+It returns a tempUrl for putting the file. You can put your file via the tempUrl. 
 
+2. Get a file from a storage
 
-* Put file
+    savi_get_file <token> <filename> <expired time>
 
-Run
+It returns a tempUrl for getting the file. You can get the file via the tempUrl.
 
-    savi_put_file
 
 ### Hardware
-(TBD)
+
+In SAVI TB Control, we are providing a client for hardware resources such as `FPGA` or `NetFPGA`.
+In the installed folder of savi (`~/savitest`), go to the college/script,
+
+First of all, you have to run the following command for setting environment variables for scripts. You can edit it for your test.
+
+    source savi_env.sh
+
+There are following environment variables.
+
+    CONTROL_WSDL: SAVI TB Control Webservice address
+    SAVI_HW_JAR: SAVI TB Control Hardware resource client jar file path
+    SAVI_USER: SAVI TB Control user name
+    SAVI_PASSWORD: SAVI TB Control password for the given user
+    SAVI_TOKEN: SAVI TB Control token for the given user and password
+    SAVI_PROJECT: SAVI TB Control project name
+    SAVI_Location: SAVI TB Control node location name
+    SAVI_NETWORK: SAVI TB Control network name
+
+1. Init a hardware resource
+
+    savi_hw_init
+
+2. Show a list of hardware resources
+ 
+    savi_hw_list
+
+3. Get the given hardware resource
+
+    savi_hw_get <hardware UUID>
+
+4. Release the given hardware resource
+
+    savi_hw_rel <hardware UUID>
+
+5. Program a Hardware resource
+
+    savi_hw_prog <hardware UUID> <image UUID>
+
+6. Show a status of the given hardware resource
+
+    savi_hw_stat <hardware UUID>
+
+7. Read a register from the given hardware resource
+ 
+    savi_hw_read_res <hardware UUID>
+
+8. Write a register value to the given hardware resource
+
+    savi_hw_write_res <hardware UUID> <register value>
+
+9. Attach the given hardware resource to the given network
+
+    savi_hw_plug_attach <hardware UUID> <hardware port UUID> <network UUID>
+
+10. Dettach the given hardware resource from the given network
+
+    savi_hw_unplug_attach <hardware UUID> <hardware port UUID> <network UUID> <network port UUID>

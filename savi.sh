@@ -482,5 +482,5 @@ if is_service_enabled king; then
     screen_it king "cd ${DEST}/${KING}/script; chmod 755 *; ls"
 fi
 if is_service_enabled college; then
-    screen_it king "cd ${DEST}/${COLLEGE}/script; chmod 755 *; ls"
+    screen_it college "cd ${DEST}/${COLLEGE}/script; chmod 755 *; ls"
 fi
