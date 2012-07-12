@@ -166,13 +166,13 @@ It returns a token and expiration date for the given user.
 
 ### Storage
 
-1. Put a file to storage
+In order to put a file to storage
 
     savi_put_file <token> <filename> <expired time>
 
 It returns a tempUrl for putting the file. You can put your file via the tempUrl. 
 
-2. Get a file from a storage
+In order to get a file from a storage
 
     savi_get_file <token> <filename> <expired time>
 
@@ -199,42 +199,42 @@ There are following environment variables.
     SAVI_Location: SAVI TB Control node location name
     SAVI_NETWORK: SAVI TB Control network name
 
-1. Init a hardware resource
+In order to initialize a hardware resource
 
     savi_hw_init
 
-2. Show a list of hardware resources
+In order to show a list of hardware resources
  
     savi_hw_list
 
-3. Get the given hardware resource
+In order to get the given hardware resource
 
     savi_hw_get <hardware UUID>
 
-4. Release the given hardware resource
+In order to release the given hardware resource
 
     savi_hw_rel <hardware UUID>
 
-5. Program a Hardware resource
+In order to program a Hardware resource
 
     savi_hw_prog <hardware UUID> <image UUID>
 
-6. Show a status of the given hardware resource
+In order to show a status of the given hardware resource
 
     savi_hw_stat <hardware UUID>
 
-7. Read a register from the given hardware resource
+In order to read a register from the given hardware resource
  
     savi_hw_read_res <hardware UUID>
 
-8. Write a register value to the given hardware resource
+In order to write a register value to the given hardware resource
 
     savi_hw_write_res <hardware UUID> <register value>
 
-9. Attach the given hardware resource to the given network
+In order to attach the given hardware resource to the given network
 
     savi_hw_plug_attach <hardware UUID> <hardware port UUID> <network UUID>
 
-10. Dettach the given hardware resource from the given network
+In order to dettach the given hardware resource from the given network
 
     savi_hw_unplug_attach <hardware UUID> <hardware port UUID> <network UUID> <network port UUID>
