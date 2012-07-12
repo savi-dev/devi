@@ -410,6 +410,7 @@ fi
 if is_service_enabled college ; then
     cd $DEST/$COLLEGE; ant dist
 fi
+cd $DEST
 
 # Launch Services
 # ===============
@@ -476,4 +477,10 @@ if is_service_enabled cheetah; then
 fi
 if is_service_enabled horse; then
     screen_it horse "cd ${DEST}/${HORSE}; java -jar dist/horse-0.1.jar"
+fi
+if is_service_enabled king; then
+    screen_it king "cd ${DEST}/${KING}/script; chmod 755 *; ls"
+fi
+if is_service_enabled college; then
+    screen_it king "cd ${DEST}/${COLLEGE}/script; chmod 755 *; ls"
 fi
