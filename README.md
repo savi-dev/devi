@@ -25,7 +25,7 @@ This version is only tested on Ubuntu 12.04. Use other versions at your risk.
 Installation
 ------------
 ### Prerequisites
-Before installing devi, you have to install openstack using `devstack` in your machine.
+Before installing devi, you have to install openstack using [devstack](http://www.devstack.org) in your machine.
 
 ### How to install SAVI Testbed Control
 The devi directory structure is as follow:
