@@ -27,7 +27,6 @@ DEVSTACK_DIR=${DEVSTACK_DIR:-/home/savi/devstack}
 
 # Import common functions
 source $TOP_DIR/functions
-source $DEVSTACK_DIR/localrc
 
 # Determine what system we are running on.  This provides ``os_VENDOR``,
 # ``os_RELEASE``, ``os_UPDATE``, ``os_PACKAGE``, ``os_CODENAME``
@@ -73,6 +72,7 @@ if [[ ! -r $TOP_DIR/savirc ]]; then
     exit 1
 fi
 source $TOP_DIR/savirc
+source $DEVSTACK_DIR/localrc
 
 # Destination path for installation ``DEST``
 DEST=${DEST:-/opt/savi}
