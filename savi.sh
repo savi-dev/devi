@@ -23,9 +23,11 @@
 
 # Keep track of the devi directory
 TOP_DIR=$(cd $(dirname "$0") && pwd)
+DEVSTACK_DIR=${DEVSTACK_DIR:-/home/savi/devstack}
 
 # Import common functions
 source $TOP_DIR/functions
+source $DEVSTACK_DIR/localrc
 
 # Determine what system we are running on.  This provides ``os_VENDOR``,
 # ``os_RELEASE``, ``os_UPDATE``, ``os_PACKAGE``, ``os_CODENAME``
@@ -372,27 +374,35 @@ if is_service_enabled college ; then
 fi
 
 # Create a database specified in `SAVI_DATABASE` in `savirc` based on a dump file located in a yorkdale project.
-mysql -u$MYSQL_USER -p$MYSQL_PASSWORD < $SAVI_DBFILE
+# 1. Copy savicontroldb.sql and change all ADMIN_PASSWORD by devstack admin password
+# 2. Add UPDATE endpoints statement to db
+TEMP_SQL=${TEMP_SQL:-$TOP_DIR/temp.sql}
+cp $SAVI_DBFILE $TEMP_SQL
+sed -i -e 's/\$ADMIN_PASSWORD/'$ADMIN_PASSWORD'/g' $TEMP_SQL
+
 
 # Update all endpoints into DB
 if [[ $HARDWARE_ENDPOINT ]]; then
-  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$HARDWARE_ENDPOINT' WHERE r.name='Hardware'";
+  echo "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$HARDWARE_ENDPOINT' WHERE r.name='Hardware';" >> $TEMP_SQL
 fi
 if [[ $KEYSTONE_ENDPOINT ]]; then
-  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$KEYSTONE_ENDPOINT' WHERE r.name='Keystone'";
+  echo "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$KEYSTONE_ENDPOINT' WHERE r.name='Keystone';" >> $TEMP_SQL
 fi
 if [[ $NOVA_ENDPOINT ]]; then
-  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$NOVA_ENDPOINT' WHERE r.name='Nova'";
+  echo "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$NOVA_ENDPOINT' WHERE r.name='Nova';" >> $TEMP_SQL
 fi
 if [[ $GLANCE_ENDPOINT ]]; then
-  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$GLANCE_ENDPOINT' WHERE r.name='Glance'";
+  echo "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$GLANCE_ENDPOINT' WHERE r.name='Glance';" >> $TEMP_SQL
 fi
 if [[ $QUANTUM_ENDPOINT ]]; then
-  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$QUANTUM_ENDPOINT' WHERE r.name='Quantum'";
+  echo "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$QUANTUM_ENDPOINT' WHERE r.name='Quantum';" >> $TEMP_SQL
 fi
 if [[ $SWIFT_ENDPOINT ]]; then
-  mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $SAVI_DATABASE -e "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$SWIFT_ENDPOINT' WHERE r.name='Swift'";
+  echo "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$SWIFT_ENDPOINT' WHERE r.name='Swift';" >> $TEMP_SQL
 fi
+
+mysql -u$MYSQL_USER -p$MYSQL_PASSWORD < $TEMP_SQL
+rm -f ./$TEMP_SQL
 
 # Build SAVI TB Projects
 # =============

@@ -8,7 +8,7 @@ set -e
 OF_DIR=`dirname $0`
 
 DEVSTACK_DIR=/home/savi/devstack
-echo "Where is the installed folder? [$DEVSTACK_DIR] "
+echo "Where is the devstack installed folder? [$DEVSTACK_DIR] "
 read DEVSTACK_DIR_READ
 if [ $DEVSTACK_DIR_READ ]; then
   DEVSTACK_DIR=$DEVSTACK_DIR_READ
@@ -17,9 +17,6 @@ fi
 source $DEVSTACK_DIR/openrc admin
 # Import common functions
 source $DEVSTACK_DIR/functions
-
-echo "Please enter a root password for MySQL:"
-read MYSQL_PASSWORD
 
 echo "What is your username for SAVI GIT?"
 read GIT_USERNAME
@@ -70,16 +67,15 @@ if [ $QUANTUMKEYSTONE_ENDPOINT_READ ]; then
 fi
 
 cp $OF_DIR/devi-localrc localrc
-sed -i -e 's/\${MYSQL_PASSWORD}/'$MYSQL_PASSWORD'/g' localrc
 sed -i -e 's/\${GIT_USERNAME}/'$GIT_USERNAME'/g' localrc
 sed -i -e 's/\${GIT_EMAIL}/'$GIT_EMAIL'/g' localrc
 echo 'HARDWARE_ENDPOINT='${HARDWARE_ENDPOINT} >> localrc
 echo 'KEYSTONE_ENDPOINT='${KEYSTONE_ENDPOINT} >> localrc
 echo 'NOVA_ENDPOINT='${NOVA_ENDPOINT} >> localrc
 echo 'SWIFT_ENDPOINT='${SWIFT_ENDPOINT} >> localrc
-echo 'SWIFT_ENDPOINT='${NOVA_ENDPOINT} >> localrc
 echo 'GLANCE_ENDPOINT='${GLANCE_ENDPOINT} >> localrc
 echo 'QUANTUM_ENDPOINT='${QUANTUM_ENDPOINT} >> localrc
+echo 'DEVSTACK_DIR='${DEVSTACK_DIR} >> localrc
 
 echo "localrc generated for devi"
 
