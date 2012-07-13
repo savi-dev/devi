@@ -52,10 +52,6 @@ IVY_FULLFILE=${UTIL_DIR}/${IVY_PKG_FILE}
 IVY_INSTALL_DIR=$ANT_IHOME/lib
 
 # Specify MySQL
-MYSQL=mysql
-MYSQL_USER=root
-MYSQL_PASSWORD=savi
-MYSQL_FILE=/etc/init.d/mysql
 SAVI_DATABASE=savicontroldb
 SAVI_DBFILE=$DEST/yorkdale/resources/savicontroldb.sql
 
