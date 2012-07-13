@@ -425,7 +425,7 @@ cd $DEST
 # Launch Services
 # ===============
 
-# Only run the services specified in ``ENABLED_SERVICES``
+# Only run the services specified in ``ENABLED_SAVI_SERVICES``
 
 if [ -z "$SCREEN_HARDSTATUS" ]; then
     SCREEN_HARDSTATUS='%{= .} %-Lw%{= .}%> %n%f %t*%{= .}%+Lw%< %-=%{g}(%{d}%H/%l%{g})'

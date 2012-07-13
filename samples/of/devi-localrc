@@ -1,4 +1,4 @@
-ENABLED_SERVICES=cheetah,king,horse,college
+ENABLED_SAVI_SERVICES=cheetah,king,horse,college
 
 GIT_USERNAME=${GIT_USERNAME}
 GIT_EMAIL=${GIT_EMAIL}

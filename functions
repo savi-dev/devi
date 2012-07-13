@@ -1,7 +1,7 @@
 # functions - Common functions used by DevStack components.
 # This file is from http://www.devstack.org
 #
-# ENABLED_SERVICES is used by is_service_enabled()
+# ENABLED_SAVI_SERVICES is used by is_service_enabled()
 
 
 # Save trace setting
@@ -230,7 +230,7 @@ $option = $value
 
 
 # is_service_enabled() checks if the service(s) specified as arguments are
-# enabled by the user in **ENABLED_SERVICES**.
+# enabled by the user in **ENABLED_SAVI_SERVICES**.
 #
 # If there are multiple services specified as arguments the test performs a
 # boolean OR or if any of the services specified on the command line
@@ -243,10 +243,10 @@ $option = $value
 function is_service_enabled() {
     services=$@
     for service in ${services}; do
-        [[ ,${ENABLED_SERVICES}, =~ ,${service}, ]] && return 0
-        [[ ${service} == "nova" && ${ENABLED_SERVICES} =~ "n-" ]] && return 0
-        [[ ${service} == "glance" && ${ENABLED_SERVICES} =~ "g-" ]] && return 0
-        [[ ${service} == "quantum" && ${ENABLED_SERVICES} =~ "q-" ]] && return 0
+        [[ ,${ENABLED_SAVI_SERVICES}, =~ ,${service}, ]] && return 0
+        [[ ${service} == "nova" && ${ENABLED_SAVI_SERVICES} =~ "n-" ]] && return 0
+        [[ ${service} == "glance" && ${ENABLED_SAVI_SERVICES} =~ "g-" ]] && return 0
+        [[ ${service} == "quantum" && ${ENABLED_SAVI_SERVICES} =~ "q-" ]] && return 0
     done
     return 1
 }

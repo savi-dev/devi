@@ -57,9 +57,9 @@ SAVI_DBFILE=$DEST/yorkdale/resources/savicontroldb.sql
 
 # Specify which services to launch.  These generally correspond to
 # screen tabs. If you like to add other services that are not enabled
-# by default you can append them in your ENABLED_SERVICES variable in
+# by default you can append them in your ENABLED_SAVI_SERVICES variable in
 # your localrc.
-ENABLED_SERVICES=cheetah,king,horse,college,mysql
+ENABLED_SAVI_SERVICES=cheetah,king,horse,college,mysql
 
 # SAVI TB control center main
 BLOOR=bloor
