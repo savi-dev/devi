@@ -75,7 +75,7 @@ source $TOP_DIR/savirc
 source $DEVSTACK_DIR/localrc
 
 # Destination path for installation ``DEST``
-DEST=${DEST:-/opt/savi}
+DEST=${DEST:-${HOME}/savitest}
 
 
 # Sanity Check
@@ -97,6 +97,19 @@ if type -p screen >/dev/null && screen -ls | egrep -q "[0-9].savi"; then
     echo "To destroy this session, kill the running screen."
     exit 1
 fi
+
+# Allow the use of an alternate hostname (such as localhost/127.0.0.1) for service endpoints.
+SERVICE_HOST=${SERVICE_HOST:-$HOST_IP}
+
+# Allow the use of an alternate public hostname for service endpoints.
+PUBLIC_SERVICE_HOST=${PUBLIC_SERVICE_HOST:-$SERVICE_HOST}
+
+# Use color for logging output
+LOG_COLOR=`trueorfalse True $LOG_COLOR`
+
+# Service startup timeout
+SERVICE_TIMEOUT=${SERVICE_TIMEOUT:-60}
+
 
 # Generic helper to configure passwords
 function read_password {
@@ -163,30 +176,30 @@ BASE_SQL_CONN=${BASE_SQL_CONN:-mysql://$MYSQL_USER:$MYSQL_PASSWORD@$MYSQL_HOST}
 # ---------
 
 # Set up logging for savi.sh
-# Set LOGFILE to turn on logging
+# Set SAVI_LOGFILE to turn on logging
 # We append '.xxxxxxxx' to the given name to maintain history
 # where xxxxxxxx is a representation of the date the file was created
-if [[ -n "$LOGFILE" || -n "$SCREEN_LOGDIR" ]]; then
+if [[ -n "$SAVI_LOGFILE" || -n "$SCREEN_LOGDIR" ]]; then
     LOGDAYS=${LOGDAYS:-7}
     TIMESTAMP_FORMAT=${TIMESTAMP_FORMAT:-"%F-%H%M%S"}
     CURRENT_LOG_TIME=$(date "+$TIMESTAMP_FORMAT")
 fi
 
-if [[ -n "$LOGFILE" ]]; then
-    # First clean up old log files.  Use the user-specified LOGFILE
+if [[ -n "$SAVI_LOGFILE" ]]; then
+    # First clean up old log files.  Use the user-specified SAVI_LOGFILE
     # as the template to search for, appending '.*' to match the date
     # we added on earlier runs.
-    LOGDIR=$(dirname "$LOGFILE")
-    LOGNAME=$(basename "$LOGFILE")
+    LOGDIR=$(dirname "$SAVI_LOGFILE")
+    LOGNAME=$(basename "$SAVI_LOGFILE")
     mkdir -p $LOGDIR
     find $LOGDIR -maxdepth 1 -name $LOGNAME.\* -mtime +$LOGDAYS -exec rm {} \;
 
-    LOGFILE=$LOGFILE.${CURRENT_LOG_TIME}
+    SAVI_LOGFILE=$SAVI_LOGFILE.${CURRENT_LOG_TIME}
     # Redirect stdout/stderr to tee to write the log file
-    exec 1> >( tee "${LOGFILE}" ) 2>&1
-    echo "savi.sh log $LOGFILE"
+    exec 1> >( tee "${SAVI_LOGFILE}" ) 2>&1
+    echo "savi.sh log $SAVI_LOGFILE"
     # Specified logfile name always links to the most recent log
-    ln -sf $LOGFILE $LOGDIR/$LOGNAME
+    ln -sf $SAVI_LOGFILE $LOGDIR/$LOGNAME
 fi
 
 # Set up logging of screen windows
@@ -211,7 +224,7 @@ trap failed ERR
 failed() {
     local r=$?
     set +o xtrace
-    [ -n "$LOGFILE" ] && echo "${0##*/} failed: full log in $LOGFILE"
+    [ -n "$SAVI_LOGFILE" ] && echo "${0##*/} failed: full log in $SAVI_LOGFILE"
     exit $r
 }
 
@@ -495,3 +508,29 @@ if is_service_enabled college; then
     cd ${DEST}/${COLLEGE}/script; chmod 755 *;
 fi
 cd ${TOP_DIR}
+
+# Fin
+# ===
+
+set +o xtrace
+
+
+# Using the SAVI TB Control Service
+# =================================
+
+echo ""
+echo ""
+echo ""
+
+# If you installed Cheetah on this server you should be able
+# to access the site using your browser for WSDL.
+if is_service_enabled cheetah; then
+    echo "Cheetah is now available at http://$SERVICE_HOST:9080/ws/ControlService"
+fi
+
+if is_service_enabled horse; then
+    echo "Horse is now available at http://$SERVICE_HOST:9090/ws/HardwareWebService"
+fi
+
+# Indicate how long this took to run (bash maintained variable 'SECONDS')
+echo "savi.sh completed in $SECONDS seconds."
