@@ -489,8 +489,9 @@ if is_service_enabled horse; then
     screen_it horse "cd ${DEST}/${HORSE}; java -jar dist/horse-0.1.jar"
 fi
 if is_service_enabled king; then
-    screen_it king "cd ${DEST}/${KING}/script; chmod 755 *; ls"
+    cd ${DEST}/${KING}/script; chmod 755 *;
 fi
 if is_service_enabled college; then
-    screen_it college "cd ${DEST}/${COLLEGE}/script; chmod 755 *; ls"
+    cd ${DEST}/${COLLEGE}/script; chmod 755 *;
 fi
+cd ${TOP_DIR}
