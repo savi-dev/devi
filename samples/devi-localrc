@@ -2,5 +2,5 @@ ENABLED_SAVI_SERVICES=cheetah,king,horse,college
 
 GIT_USERNAME=${GIT_USERNAME}
 GIT_EMAIL=${GIT_EMAIL}
-SAVI_LOGFILE=$DEST/logs/stack.sh.log
+SAVI_LOGFILE=$DEST/logs/savi.sh.log
 

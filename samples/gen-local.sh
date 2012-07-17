@@ -14,7 +14,7 @@ if [ $DEVSTACK_DIR_READ ]; then
   DEVSTACK_DIR=$DEVSTACK_DIR_READ
 fi
 
-source $DEVSTACK_DIR/openrc admin
+source $DEVSTACK_DIR/openrc demo demo
 # Import common functions
 source $DEVSTACK_DIR/functions
 
