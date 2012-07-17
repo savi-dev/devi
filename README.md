@@ -14,7 +14,7 @@ Goals
 * To install yak
 * To download all projects from SAVI repository based on configuration
 * To build all projects
-* To drop a database 'aoncontroldb' and restore a database dump
+* To drop a database 'savicontroldb' and restore a database dump
 * To run using screen
 * To test using examples
 
