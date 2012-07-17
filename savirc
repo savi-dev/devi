@@ -9,7 +9,10 @@ PROJECT=DEVI
 SAVI_VERSION=0.1
 
 # Set Devi Install Directory
-DEST=$HOME/savitest
+DEST=$HOME/savi
+
+# Set Devi Workspace Directory
+DESTWS=$HOME/savi-workspace
 
 # Set git user name in savinetwork.ca
 GIT_USERNAME=sample
