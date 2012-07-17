@@ -50,19 +50,15 @@ The devi directory structure is as follow:
       |
       + samples
         |
-        + localrc
+        + devi-localrc
         |
-        + of
-          |
-          + devi-localrc
-          |
-          + gen-local.sh
+        + gen-local.sh
       |
       + util
 
 In project's root folder, run:
 
-    samples/of/gen-local.sh
+    samples/gen-local.sh
 
 This scripts asks for some parameters, and generates the localrc for you. Then,
 run devi to complete the installation:
@@ -99,7 +95,7 @@ and Openstack for cloud.
 
 Run:
 
-    samples/of/gen-local.sh
+    samples/gen-local.sh
 
 For our example, answer the question as below:
 
@@ -109,16 +105,10 @@ For our example, answer the question as below:
     <mysql password>
     What is your username for SAVI GIT?
     sample
-    What is your username for SAVI GIT?
-    sample
     What is your email address for SAVI GIT?
     sample@sample.org
     What is an endpoint for Hardware webservice? [http://localhost:9090/ws/HardwareWebService]
     <hardware webservice endpoint>	
-    What is an endpoint for Hardware webservice? [http://localhost:9090/ws/HardwareWebService]
-    <nova_endpoint>
-    What is an endpoint for Storage? [http://192.168.123.201:8080/v1/AUTH_45ea9b19c3d94ad7887f64faa9d35faf]
-    <swift endpoint>
     What is an endpoint for Identity? [http://192.168.123.201:35357/v2.0]
     <keystone endpoint>
     What is an endpoint for Image? [http://192.168.123.201:9292]
@@ -129,7 +119,7 @@ For our example, answer the question as below:
     Now run ./savi.sh
 
 ## Test SAVI TB Control
-In the installed folder of savi (`~/savitest`), go to the king/script,
+In the installed folder of savi (`~/savi`), go to the king/script,
 
 **NOTE**: For your convenience, devi provides screens for executing scripts. If you are familiar with `screen', you can see clients by running the following command:
 
@@ -182,7 +172,7 @@ It returns a tempUrl for getting the file. You can get the file via the tempUrl.
 ### Hardware
 
 In SAVI TB Control, we are providing a client for hardware resources such as `FPGA` or `NetFPGA`.
-In the installed folder of savi (`~/savitest`), go to the college/script,
+In the installed folder of savi (`~/savi`), go to the college/script,
 
 First of all, you have to run the following command for setting environment variables for scripts. You can edit it for your test.
 
