@@ -14,6 +14,13 @@ if [ $DEVSTACK_DIR_READ ]; then
   DEVSTACK_DIR=$DEVSTACK_DIR_READ
 fi
 
+NODE_LOCATION=Toronto
+echo "What is the node location [$NODE_LOCATION]"
+read NODE_LOCATION_READ
+if [ $NODE_LOCATION_READ ]; then
+  NODE_LOCATION=$NODE_LOCATION_READ
+fi
+
 source $DEVSTACK_DIR/openrc demo demo
 # Import common functions
 source $DEVSTACK_DIR/functions
@@ -76,6 +83,7 @@ echo 'SWIFT_ENDPOINT='${SWIFT_ENDPOINT} >> localrc
 echo 'GLANCE_ENDPOINT='${GLANCE_ENDPOINT} >> localrc
 echo 'QUANTUM_ENDPOINT='${QUANTUM_ENDPOINT} >> localrc
 echo 'DEVSTACK_DIR='${DEVSTACK_DIR} >> localrc
+echo 'NODE_LOCATION='${NODE_LOCATION} >> localrc
 
 echo "localrc generated for devi"
 

@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+# source savienvrc [username] [tenantname]
+#
+# This file is based on devstack/openrc and use it
+#
+# Configure a set of credentials for $TENANT/$USERNAME:
+#   Set OS_TENANT_NAME to override the default tenant 'demo'
+#   Set OS_USERNAME to override the default user name 'demo'
+#   Set ADMIN_PASSWORD to set the password for 'admin' and 'demo'
+
+# Devstack installation folder
+# Find the other rc files
+RC_DIR=$(cd $(dirname "$BASH_SOURCE") && pwd)
+
+# Load local configuration
+source $RC_DIR/savirc
+
+KING_DIR=${DEST/$KING:-$HOME/savi/king}
+COLLEGE_DIR=${DEST/$COLLEGE:-$HOME/savi/college}
+NODE_LOCATION=${NODE_LOCATION:-tr-edge-1}
+# TODO(eliot): Need to configure it later
+NETWORK=savinetwork
+
+# Use functions for getting token
+source $RC_DIR/functions
+source $DEVSTACK_DIR/openrc $1 $2
+TOKEN=$(keystone  token-get | grep ' id ' | get_field 2)
+
+echo "For SAVI TB control service"
+echo "User: $OS_USERNAME, Tenant: $OS_TENANT_NAME"
+
+export CONTROL_WSDL=http://localhost:9080/ws/ControlService?wsdl
+export SAVI_JAR=$KING_DIR/dist/king-0.1.jar
+export SAVI_HW_JAR=$COLLEGE_DIR/dist/college-0.1.jar
+export SAVI_USER=$OS_USERNAME
+export SAVI_PASSWORD=$OS_PASSWORD
+export SAVI_TOKEN=$TOKEN
+export SAVI_PROJECT=$OS_TENANT_NAME
+export SAVI_LOCATION=$NODE_LOCATION
+export SAVI_NETWORK=$NETWORK

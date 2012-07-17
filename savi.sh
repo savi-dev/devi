@@ -75,7 +75,8 @@ source $TOP_DIR/savirc
 source $DEVSTACK_DIR/localrc
 
 # Destination path for installation ``DEST``
-DEST=${DEST:-${HOME}/savitest}
+DEST=${DEST:-${HOME}/savi}
+DESTBIN=${DESTBIN:-${DEST}/bin}
 
 
 # Sanity Check
@@ -501,12 +502,20 @@ fi
 if is_service_enabled horse; then
     screen_it horse "cd ${DEST}/${HORSE}; java -jar dist/horse-0.1.jar"
 fi
+
+# create the folder for scripts
+mkdir -p $DESTBIN
+if [ ! -w $DESTBIN ]; then
+    chown `whoami` $DESTBIN
+fi
 if is_service_enabled king; then
     cd ${DEST}/${KING}/script; chmod 755 *;
+    cp -f ${DEST}/${KING}/script/* ${DESTBIN}
 fi
 if is_service_enabled college; then
-    cd ${DEST}/${COLLEGE}/script; chmod 755 *;
+    cp -f ${DEST}/${COLLEGE}/script/* ${DESTBIN}
 fi
+chmod 755 $DESTBIN/*
 cd ${TOP_DIR}
 
 # Fin
