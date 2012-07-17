@@ -16,8 +16,8 @@ RC_DIR=$(cd $(dirname "$BASH_SOURCE") && pwd)
 # Load local configuration
 source $RC_DIR/savirc
 
-KING_DIR=${DEST/$KING:-$HOME/savi/king}
-COLLEGE_DIR=${DEST/$COLLEGE:-$HOME/savi/college}
+KING_DIR=$DEST/$KING
+COLLEGE_DIR=$DEST/$COLLEGE
 NODE_LOCATION=${NODE_LOCATION:-tr-edge-1}
 # TODO(eliot): Need to configure it later
 NETWORK=savinetwork
