@@ -402,24 +402,18 @@ fi
 if [[ $KEYSTONE_ENDPOINT ]]; then
   echo "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$KEYSTONE_ENDPOINT' WHERE r.name='Keystone';" >> $TEMP_SQL
 fi
-if [[ $NOVA_ENDPOINT ]]; then
-  echo "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$NOVA_ENDPOINT' WHERE r.name='Nova';" >> $TEMP_SQL
-fi
 if [[ $GLANCE_ENDPOINT ]]; then
   echo "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$GLANCE_ENDPOINT' WHERE r.name='Glance';" >> $TEMP_SQL
 fi
 if [[ $QUANTUM_ENDPOINT ]]; then
   echo "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$QUANTUM_ENDPOINT' WHERE r.name='Quantum';" >> $TEMP_SQL
 fi
-if [[ $SWIFT_ENDPOINT ]]; then
-  echo "UPDATE resources r INNER JOIN resource_addresses ra ON r.ID = ra.resourceID SET ra.address='$SWIFT_ENDPOINT' WHERE r.name='Swift';" >> $TEMP_SQL
-fi
 
 mysql -u$MYSQL_USER -p$MYSQL_PASSWORD < $TEMP_SQL
 rm -f ./$TEMP_SQL
 
 # Build SAVI TB Projects
-# =============
+# ======================
 
 # Build all SAVI TB projects
 if is_service_enabled cheetah ; then
@@ -435,6 +429,29 @@ if is_service_enabled college ; then
     cd $DEST/$COLLEGE; ant dist
 fi
 cd $DEST
+
+# Create Eclipse workspace
+# ========================
+if [ -n "$WORKSPACE" ]; then
+sudo apt-get install expect -y
+mkdir -p $WORKSPACE
+for arg in `ls $DEST`
+do
+	if [[ ${arg} == $DEST || ${arg} == "bin" || ${arg} == "logs" ]]; then
+		continue
+	fi
+echo "Creating ${arg} workspace to ${WORKSPACE}/${arg}..."
+mkdir -p ${WORKSPACE}/${arg}
+cd ${DEST}/${arg}
+expect -c "
+spawn projector eclipse ${WORKSPACE}/${arg}
+expect {
+comma): {send \"java\r\"; exp_continue}
+}
+exit
+"
+done
+fi
 
 # Launch Services
 # ===============

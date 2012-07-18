@@ -5,7 +5,7 @@
 
 set -e
 
-OF_DIR=`dirname $0`
+SAMPLE_DIR=`dirname $0`
 
 DEVSTACK_DIR=/home/savi/devstack
 echo "Where is the devstack installed folder? [$DEVSTACK_DIR] "
@@ -21,7 +21,7 @@ if [ $NODE_LOCATION_READ ]; then
   NODE_LOCATION=$NODE_LOCATION_READ
 fi
 
-source $DEVSTACK_DIR/openrc demo demo
+source $DEVSTACK_DIR/openrc
 # Import common functions
 source $DEVSTACK_DIR/functions
 
@@ -45,20 +45,6 @@ if [ $KEYSTONE_ENDPOINT_READ ]; then
   KEYSTONE_ENDPOINT=$KEYSTONE_ENDPOINT_READ
 fi
 
-NOVA_ENDPOINT=$(keystone  catalog | grep 'publicURL' | grep '8774' | get_field 2)
-echo "What is an endpoint for Compute? [$NOVA_ENDPOINT]"
-read NOVA_ENDPOINT_READ
-if [ $NOVA_ENDPOINT_READ ]; then
-  NOVA_ENDPOINT=$NOVA_ENDPOINT_READ
-fi
-
-SWIFT_ENDPOINT=$(keystone  catalog | grep 'publicURL' | grep '8080' | grep 'AUTH' | get_field 2)
-echo "What is an endpoint for Storage? [$SWIFT_ENDPOINT]"
-read SWIFT_ENDPOINT_READ
-if [ $SWIFT_ENDPOINT_READ ]; then
-  SWIFT_ENDPOINT=$SWIFT_ENDPOINT_READ
-fi
-
 GLANCE_ENDPOINT=$(keystone  catalog | grep 'publicURL' | grep '9292' | get_field 2)
 echo "What is an endpoint for Image? [$GLANCE_ENDPOINT]"
 read GLANCE_ENDPOINT_READ
@@ -73,17 +59,33 @@ if [ $QUANTUMKEYSTONE_ENDPOINT_READ ]; then
   QUANTUM_ENDPOINT=$QUANTUM_ENDPOINT_READ
 fi
 
-cp $OF_DIR/devi-localrc localrc
+echo "Would you like to create workspace for Eclipse? ([n]/y)"
+read USE_ECLIPSE
+
+WORKSPACE=$HOME/savi-workspace
+if [[ "$USE_ECLIPSE" == "y" ]]; then
+  echo "This version supports Eclipse workspace generation."
+  echo "Where is the workspace for Eclpse [$WORKSPACE]"
+  read WORKSPACE_READ
+  if [ $WORKSPACE_READ ]; then
+    WORKSPACE=$WORKSPACE_READ
+  fi
+fi
+
+cp $SAMPLE_DIR/devi-localrc localrc
 sed -i -e 's/\${GIT_USERNAME}/'$GIT_USERNAME'/g' localrc
 sed -i -e 's/\${GIT_EMAIL}/'$GIT_EMAIL'/g' localrc
 echo 'HARDWARE_ENDPOINT='${HARDWARE_ENDPOINT} >> localrc
 echo 'KEYSTONE_ENDPOINT='${KEYSTONE_ENDPOINT} >> localrc
-echo 'NOVA_ENDPOINT='${NOVA_ENDPOINT} >> localrc
-echo 'SWIFT_ENDPOINT='${SWIFT_ENDPOINT} >> localrc
 echo 'GLANCE_ENDPOINT='${GLANCE_ENDPOINT} >> localrc
 echo 'QUANTUM_ENDPOINT='${QUANTUM_ENDPOINT} >> localrc
 echo 'DEVSTACK_DIR='${DEVSTACK_DIR} >> localrc
 echo 'NODE_LOCATION='${NODE_LOCATION} >> localrc
+if [[ $USE_ECLIPSE == "y" ]]; then
+  echo 'WORKSPACE='${WORKSPACE} >> localrc
+fi
+
+echo '' >> localrc
 
 echo "localrc generated for devi"
 
