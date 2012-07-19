@@ -14,9 +14,6 @@ DEST=$HOME/savi
 # Set Devi Script Directory
 DESTBIN=$DEST/bin
 
-# Set Devi Workspace Directory
-DESTWS=$HOME/savi-workspace
-
 # Set git user name in savinetwork.ca
 GIT_USERNAME=sample
 GIT_EMAIL=sample@savinetwork.ca
