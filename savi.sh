@@ -255,6 +255,11 @@ sudo apt-get install python-setuptools -y
 echo "[${PROJECT}] Installing a screen utility"
 sudo apt-get install screen -y
 
+# Expect
+# ------
+echo "[${PROJECT}] Installing an expect"
+sudo apt-get install expect -y
+
 # Yak tool
 # ----------------
 # If yak is installed, skip this process, otherwise, download it from 
@@ -372,7 +377,16 @@ fi
 # Clone all enabled packages from SAVI repository
 if is_service_enabled cheetah ; then
     # SAVI TB web service
-  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $CHEETAH_PRJ
+#  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $CHEETAH_PRJ
+  cd $DEST; export GITVI_USER=$GIT_USERNAME;
+expect -c "
+spawn gitvi clone $CHEETAH_PRJ
+expect {
+(yes/no)? {send \"yes\r\"; exp_continue}
+}
+exit
+"
+
 fi
 if is_service_enabled horse ; then
     # SAVI HW Resource web service
@@ -433,7 +447,6 @@ cd $DEST
 # Create Eclipse workspace
 # ========================
 if [ -n "$WORKSPACE" ]; then
-sudo apt-get install expect -y
 mkdir -p $WORKSPACE
 for arg in `ls $DEST`
 do
