@@ -15,7 +15,7 @@ if [ $DEVSTACK_DIR_READ ]; then
 fi
 
 NODE_LOCATION=Toronto
-echo "What is the node location [$NODE_LOCATION]"
+echo "Where is the node? [$NODE_LOCATION]"
 read NODE_LOCATION_READ
 if [ $NODE_LOCATION_READ ]; then
   NODE_LOCATION=$NODE_LOCATION_READ
