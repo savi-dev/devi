@@ -65,7 +65,7 @@ read USE_ECLIPSE
 WORKSPACE=$HOME/savi-workspace
 if [[ "$USE_ECLIPSE" == "y" ]]; then
   echo "This version supports Eclipse workspace generation."
-  echo "Where is the workspace for Eclpse [$WORKSPACE]"
+  echo "Where is the workspace for Eclipse [$WORKSPACE]"
   read WORKSPACE_READ
   if [ $WORKSPACE_READ ]; then
     WORKSPACE=$WORKSPACE_READ
