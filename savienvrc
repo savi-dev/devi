@@ -31,7 +31,7 @@ SWIFT_ENDPOINT=$(keystone  catalog | grep 'publicURL' | grep '8080' | grep 'AUTH
 echo "For SAVI TB control service"
 echo "User: $OS_USERNAME, Tenant: $OS_TENANT_NAME"
 
-export SAVI_HOST=localhost
+export SAVI_HOST=$HOST_IP
 export CONTROL_WSDL=http://$SAVI_HOST:9080/ws/ControlService?wsdl
 export SAVI_JAR=$KING_DIR/dist/$KING-$SAVI_VERSION.jar
 export SAVI_HW_JAR=$COLLEGE_DIR/dist/$COLLEGE-$SAVI_VERSION.jar
