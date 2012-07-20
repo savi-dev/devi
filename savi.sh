@@ -545,6 +545,7 @@ fi
 if is_service_enabled college; then
     cp -f ${DEST}/${COLLEGE}/script/* ${DESTBIN}
 fi
+cp -f ${TOP_DIR}/test/* $DESTBIN
 chmod 755 $DESTBIN/*
 cd ${TOP_DIR}
 
