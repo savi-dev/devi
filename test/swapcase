@@ -1,0 +1,16 @@
+#!/bin/bash -f
+# Copyright (c) 2012, The SAVI Project.
+# Eliot J. Kang
+
+# you need to run "source devi/savienvrc <username> <tenantname>"
+# before running this file
+if [[ -z $1 || -z $2 ]]; then
+  echo "Usage: $0 <from tempUrl> <to tempUrl> <Service HOST>"
+  exit
+fi
+# REST JSON content body
+# Credential
+FROM="_from=$1"
+TO="_to=$2"
+echo $TEMPURL
+curl -s -X POST --data-urlencode $FROM --data-urlencode $TO http://$3:5000/swapCase

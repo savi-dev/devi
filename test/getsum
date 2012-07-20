@@ -1,0 +1,15 @@
+#!/bin/bash -f
+# Copyright (c) 2012, The SAVI Project.
+# Eliot J. Kang
+
+# you need to run "source devi/savienvrc <username> <tenantname>"
+# before running this file
+if [[ -z $1 || -z $2 ]]; then
+  echo "Usage: $0 <tempUrl> <Service HOST>"
+  exit
+fi
+# REST JSON content body
+# Credential
+TEMPURL="tempUrl=$1"
+echo $TEMPURL
+curl -s -X POST --data-urlencode $TEMPURL http://$2:5000/getSum
