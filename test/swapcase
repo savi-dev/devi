@@ -5,12 +5,15 @@
 # you need to run "source devi/savienvrc <username> <tenantname>"
 # before running this file
 if [[ -z $1 || -z $2 ]]; then
-  echo "Usage: $0 <from tempUrl> <to tempUrl> <Service HOST>"
+  echo "Usage: $0 <from file> <to file> <Service HOST>"
   exit
 fi
 # REST JSON content body
 # Credential
+FROM=`get-file $1 1000`
+TO=`put-file $2 1000`
+echo "From: $FROM"
+echo "To: $TO"
 FROM="_from=$1"
 TO="_to=$2"
-echo $TEMPURL
 curl -s -X POST --data-urlencode $FROM --data-urlencode $TO http://$3:5000/swapCase
