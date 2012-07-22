@@ -5,12 +5,12 @@
 # you need to run "source devi/savienvrc <username> <tenantname>"
 # before running this file
 if [[ -z $1 || -z $2 ]]; then
-  echo "Usage: $0 <file> <Service HOST>"
+  echo "Usage: $0 <file> <Service HOST:PORT>"
   exit
 fi
-# REST JSON content body
-# Credential
+
+# Get TempURL for file
 TEMPURL=`get-file $1 1000`
 echo $TEMPURL
 TEMPURL="tempUrl=$TEMPURL"
-curl -s -X POST --data-urlencode "$TEMPURL" http://$2:8888/getSum
+curl -s -X POST --data-urlencode "$TEMPURL" http://$2/getSum
