@@ -15,6 +15,6 @@ FROM=`get-file $1 1000`
 TO=`put-file $2 1000`
 echo "From: $FROM"
 echo "To: $TO"
-FROM="_from=$1"
-TO="_to=$2"
+FROM="_from=$FROM"
+TO="_to=$TO"
 curl -s -X POST --data-urlencode $FROM --data-urlencode $TO http://$3/swapCase
