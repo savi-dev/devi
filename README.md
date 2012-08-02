@@ -129,7 +129,7 @@ king is a client for SAVI TB Control and college is a client for Hardware resour
 
 First of all, you have to run the following command for setting environment variables for scripts. You can edit it for your test.
 
-    source savi_env.sh
+    source savienvrc
 
 There are following environment variables.
 
