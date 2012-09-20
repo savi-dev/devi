@@ -62,7 +62,7 @@ SAVI_DBFILE=$DEST/yorkdale/resources/savicontroldb.sql
 # screen tabs. If you like to add other services that are not enabled
 # by default you can append them in your ENABLED_SAVI_SERVICES variable in
 # your localrc.
-ENABLED_SAVI_SERVICES=cheetah,king,horse,college,mysql
+ENABLED_SAVI_SERVICES=cheetah,king,lion,museum,mysql
 
 # SAVI TB control center main
 BLOOR=bloor
@@ -82,6 +82,12 @@ HORSE_PRJ=savi/horse
 HORSE_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/horse
 HORSE_BRANCH=master
 
+# Hardware resource service
+LION=horse
+LION_PRJ=savi/lion
+LION_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/lion
+LION_BRANCH=master
+
 # SAVI CLI Client
 KING=king
 KING_PRJ=savi/king
@@ -93,6 +99,12 @@ COLLEGE=college
 COLLEGE_PRJ=savi/college
 COLLEGE_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/college
 COLLEGE_BRANCH=master
+
+# Hardware CLI Client
+MUSEUM=museum
+MUSEUM_PRJ=savi/museum
+MUSEUM_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/museum
+MUSEUM_BRANCH=master
 
 # allow local overrides of env variables
 if [ -f $RC_DIR/localrc ]; then

@@ -388,17 +388,17 @@ exit
 "
 
 fi
-if is_service_enabled horse ; then
+if is_service_enabled lion ; then
     # SAVI HW Resource web service
-  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $HORSE_PRJ
+  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $LION_PRJ
 fi
 if is_service_enabled king ; then
     # SAVI TB CLI client
   cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $KING_PRJ
 fi
-if is_service_enabled college ; then
+if is_service_enabled museum ; then
     # SAVI HW Resource CLI client
-  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $COLLEGE_PRJ
+  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $MUSEUM_PRJ
 fi
 
 # Create a database specified in `SAVI_DATABASE` in `savirc` based on a dump file located in a yorkdale project.
