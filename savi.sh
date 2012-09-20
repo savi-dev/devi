@@ -547,7 +547,7 @@ if is_service_enabled horse; then
     screen_it horse "cd ${DEST}/${HORSE}; java -jar dist/horse-0.1.jar"
 fi
 if is_service_enabled lion; then
-    screen_it lion "cd ${DEST}/${HORSE}; java -jar dist/lion-0.1.jar"
+    screen_it lion "cd ${DEST}/${LION}; java -jar dist/lion-0.1.jar"
 fi
 # create the folder for scripts
 mkdir -p $DESTBIN
