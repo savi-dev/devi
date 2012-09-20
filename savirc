@@ -83,7 +83,7 @@ HORSE_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/horse
 HORSE_BRANCH=master
 
 # Hardware resource service
-LION=horse
+LION=lion
 LION_PRJ=savi/lion
 LION_REPO=ssh://$GIT_USERNAME@review.savinetwork.ca:29418/savi/lion
 LION_BRANCH=master
