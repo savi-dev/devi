@@ -392,6 +392,10 @@ if is_service_enabled lion ; then
     # SAVI HW Resource web service
   cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $LION_PRJ
 fi
+if is_service_enabled horse ; then
+    # SAVI HW Resource web service
+  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $HORSE_PRJ
+fi
 if is_service_enabled king ; then
     # SAVI TB CLI client
   cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $KING_PRJ
@@ -399,6 +403,10 @@ fi
 if is_service_enabled museum ; then
     # SAVI HW Resource CLI client
   cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $MUSEUM_PRJ
+fi
+if is_service_enabled college ; then
+    # SAVI HW Resource CLI client
+  cd $DEST; export GITVI_USER=$GIT_USERNAME; gitvi clone $COLLEGE_PRJ
 fi
 
 # Create a database specified in `SAVI_DATABASE` in `savirc` based on a dump file located in a yorkdale project.
@@ -436,11 +444,17 @@ fi
 if is_service_enabled horse ; then
     cd $DEST/$HORSE; ant dist
 fi
+if is_service_enabled lion ; then
+    cd $DEST/$LION; ant dist
+fi
 if is_service_enabled king ; then
     cd $DEST/$KING; ant dist
 fi
 if is_service_enabled college ; then
     cd $DEST/$COLLEGE; ant dist
+fi
+if is_service_enabled museum ; then
+    cd $DEST/$MUSEUM; ant dist
 fi
 cd $DEST
 
@@ -532,7 +546,9 @@ fi
 if is_service_enabled horse; then
     screen_it horse "cd ${DEST}/${HORSE}; java -jar dist/horse-0.1.jar"
 fi
-
+if is_service_enabled lion; then
+    screen_it lion "cd ${DEST}/${HORSE}; java -jar dist/lion-0.1.jar"
+fi
 # create the folder for scripts
 mkdir -p $DESTBIN
 if [ ! -w $DESTBIN ]; then
@@ -544,6 +560,9 @@ if is_service_enabled king; then
 fi
 if is_service_enabled college; then
     cp -f ${DEST}/${COLLEGE}/script/* ${DESTBIN}
+fi
+if is_service_enabled museum; then
+    cp -f ${DEST}/${MUSEUM}/script/* ${DESTBIN}
 fi
 cp -f ${TOP_DIR}/test/* $DESTBIN
 chmod 755 $DESTBIN/*
